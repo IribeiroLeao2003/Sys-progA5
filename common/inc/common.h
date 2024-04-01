@@ -15,8 +15,8 @@
 
 struct kSharedMemory {
     char buffer[kBufferSize];
-    int read_index;
-    int write_index;
+    int readIndex;
+    int writeIndex;
 };
 
 int handleSharedMemory(key_t key);

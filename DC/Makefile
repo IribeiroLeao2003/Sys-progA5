@@ -19,6 +19,9 @@
 ./obj/DC-Resources.o : ./src/DC-Resources.c ./inc/DC.h ../common/inc/common.h
 	cc -c -I./inc ./src/DC-Resources.c -o ./obj/DC-Resources.o 
 	
+./obj/DC-Signals.o : ./src/DC-Signals.c ./inc/DC.h ../common/inc/common.h
+	cc -c -I./inc ./src/DC-Signals.c -o ./obj/DC-Signals.o 
+	
 ../common/obj/common.o : ../common/src/common.c ../common/inc/common.h
 	cc -c -I/inc ../common/src/common.c -o ../common/obj/common.o
 	

@@ -3,7 +3,7 @@
 * Project: SENG2030-24W - A-05 The Hisogram System
 * Programmer: Vivian Morton, Isaac Ribeiro Leao, Jakob Warywoda 
 * First Version: 01-04-2024
-* Description: This file constants the logic for handling resources such as shared memory and the semaphore
+* Description: This file contains the logic for handling resources such as shared memory and the semaphore
 */
 
 #include "../inc/DC.h"

@@ -3,21 +3,26 @@
 * Project: SENG2030-24W - A-05 The Hisogram System
 * Programmer: Vivian Morton, Isaac Ribeiro Leao, Jakob Warywoda 
 * First Version: 01-04-2024
-* Description: This file constants the main logic for the DC
+* Description: This file contains the main logic for the DC
 */
 
 #include "../inc/DC.h"
 
+//required global variable for handling signals
+bool shutdown = false;
+
+
 //Free semaphore
 //semctl (semid, 0, IPC_RMID, 0); 
 
-
 int main(int argc, char* argv[])
 {
+
     if (argc == kArgsCount)
     {
         
-
+        signal (SIGINT, shutDownHandler); //setup the sigint hanlder
+        
         int errorStatus = kSuccess;
         //copy args
         int sharedMemId = atoi(argv[kSharedMemLoc]);
@@ -28,7 +33,17 @@ int main(int argc, char* argv[])
         int semId = 0;
         
         //start process loop
-        errorStatus = attachToResources(pSharedMem, sharedMemId, &semId);
+        errorStatus = attachToResources(pSharedMem, semId, sharedMemId, &semId);
+
+        if (errorStatus != kError)
+        {
+
+        }
+        else
+        {
+            return kError;
+        }
+
     }
     else
     {
@@ -46,11 +61,22 @@ int main(int argc, char* argv[])
 *             : pid_t DP2PID: the pid of DP2
 * RETURNS     : The error status of the proccess
 */
-void processLoop(int sharedMemId, pid_t DP1PID, pid_t DP2PID)
+void processLoop(int sharedMemId, int semId, pid_t DP1PID, pid_t DP2PID)
 {
+    
 
+    while(shutdown == false) //until shutdown
+    {
+
+    }
+    killDPs(DP1PID, DP2PID);
 }
 
 
 
 
+void shutDownHandler(int SignalNumber)
+{
+    shutdown = true;
+    signal (SIGINT, shutDownHandler); //setup the sigint hanlder
+}

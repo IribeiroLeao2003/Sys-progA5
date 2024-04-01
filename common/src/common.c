@@ -3,7 +3,7 @@
 * Project: SENG2030-24W - A-05 The Hisogram System
 * Programmer: Vivian Morton, Isaac Ribeiro Leao, Jakob Warywoda 
 * First Version: 01-04-2024
-* Description: This file constants common functions for the system to use
+* Description: This file contains common functions for the system to use
 */
 
 #include "../../common/inc/common.h"

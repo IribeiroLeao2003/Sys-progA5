@@ -3,7 +3,7 @@
 * Project: SENG2030-24W - A-05 The Hisogram System
 * Programmer: Vivian Morton, Isaac Ribeiro Leao, Jakob Warywoda 
 * First Version: 01-04-2024
-* Description: This file constants and function prototypes for the DC
+* Description: This file contains constants and function prototypes for the DC
 */
 
 #include "../../common/inc/common.h"
@@ -16,9 +16,9 @@
 
 #define kSleepTime         2
 
-
-
 //function prototypes
+void shutDownHandler(int SignalNumber);
+void killDPs(pid_t DP1PID, pid_t DP2PID);
 int attachToResources(SharedMemory* pSharedMem, int sharedMemId, int* semId);
-void processLoop(int sharedMemId, pid_t DP1PID, pid_t DP2PID);
+void processLoop(int sharedMemId, int semId, pid_t DP1PID, pid_t DP2PID);
 int closeSharedMem(int sharedMemID);

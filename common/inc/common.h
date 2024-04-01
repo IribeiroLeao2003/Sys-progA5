@@ -3,19 +3,18 @@
 * Project: SENG2030-24W - A-05 The Hisogram System
 * Programmer: Vivian Morton, Isaac Ribeiro Leao, Jakob Warywoda 
 * First Version: 01-04-2024
-* Description: This file constants common structs, constants, and function prototypes for the system to use
+* Description: This file contains common structs, constants, and function prototypes for the system to use
 */
-
-
-
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define kSharedMemorySize   258
 #define kSemKey             0x3214

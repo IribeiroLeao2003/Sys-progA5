@@ -85,13 +85,41 @@ void processLoop(SharedMemory* pSharedMem, int semId)
 void printData()
 {
     system("clear");//clear terminal
+    char symbols[kSymbolsLength] = {"\0"};
     for(int i = 0; i <= kLettersAtoT; i++)
     {
-        printf("%C-%03d\n", i+kOffset, letterCounts[i]);
+        createSymbols(symbols, letterCounts[i]);
+        printf("%C-%03d %s\n", i+kOffset, letterCounts[i], symbols);
     }
 }
 
 
+/*
+* FUNCTION    : createSymbols()
+* DESCRIPTION : Creates symbol string based on the given value
+* PARAMETERS  : char symbols[]: the string to write to
+*             : int letterCount: the count to use
+* RETURNS     : void
+*/
+void createSymbols(char symbols[], int letterCount)
+{
+    strcpy(symbols, ""); //clear string
+    while (letterCount > 0)
+    {
+        if (letterCount >= 100)
+        {
+            strcat(symbols, "*");
+        }
+        else if (letterCount >= 10)
+        {
+            strcat(symbols, "+");
+        }
+        else if(letterCount >= 1)
+        {
+            strcat(symbols, "-");
+        }
+    }
+}
 
 
 /*

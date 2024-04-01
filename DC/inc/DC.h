@@ -15,6 +15,7 @@
 #define kDP2ProcIDLoc      2
 #define kArgsCount         3
 #define kReadCount         20
+#define kSymbolsLength     11
 
 #define kSleepTime         2
 #define kTenSeconds        10
@@ -26,3 +27,4 @@ void processLoop(SharedMemory* pSharedMem, int semId);
 int closeSharedMem(int sharedMemID);
 int closeSemaphore(int semaphoreId);
 void printData();
+void createSymbols(char symbols[], int letterCount);

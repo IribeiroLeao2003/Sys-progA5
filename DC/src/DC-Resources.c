@@ -57,3 +57,24 @@ int closeSharedMem(int sharedMemID)
 
     return errorStatus;
 }
+
+
+
+/*
+* FUNCTION    : closeSemaphore()
+* DESCRIPTION : This function takes the semaphore id and releases it if possible
+* PARAMETERS  : int semaphoreId: the id of the semaphore to releases
+* RETURNS     : The error status of the proccess
+*/
+int closeSemaphore(int semaphoreId)
+{
+    int errorStatus = kSuccess;
+    
+    if (semctl (semaphoreId, 0, IPC_RMID, 0) == kError) //try to close semaphore
+    {
+        perror("Failed Semaphore Close"); //note any errors from closing
+        errorStatus = kError;
+    }
+
+    return errorStatus;
+}

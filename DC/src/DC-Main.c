@@ -10,40 +10,36 @@
 
 //required global variable for handling signals
 bool shutdown = false;
+pid_t DP1PID = 0;
+pid_t DP2PID = 0;
 
-
-//Free semaphore
-//semctl (semid, 0, IPC_RMID, 0); 
 
 int main(int argc, char* argv[])
 {
-
     if (argc == kArgsCount)
     {
-        
         signal (SIGINT, shutDownHandler); //setup the sigint hanlder
         
         int errorStatus = kSuccess;
         //copy args
         int sharedMemId = atoi(argv[kSharedMemLoc]);
-        pid_t DP1PID = atoi(argv[kDP1ProcIDLoc]);
-        pid_t DP2PID = atoi(argv[kDP2ProcIDLoc]);
+        DP1PID = atoi(argv[kDP1ProcIDLoc]);
+        DP2PID = atoi(argv[kDP2ProcIDLoc]);
         
         SharedMemory* pSharedMem = NULL;
         int semId = 0;
         
-        //start process loop
-        errorStatus = attachToResources(pSharedMem, semId, sharedMemId, &semId);
+        //Ready to attach
+        errorStatus = attachToResources(pSharedMem, sharedMemId, &semId);
 
         if (errorStatus != kError)
         {
-
-        }
-        else
-        {
-            return kError;
+            processLoop(pSharedMem, semId);
         }
 
+        //Done process loop so shutdown
+        closeSharedMem(sharedMemId);
+        releaseSemaphore(semId);
     }
     else
     {
@@ -61,15 +57,12 @@ int main(int argc, char* argv[])
 *             : pid_t DP2PID: the pid of DP2
 * RETURNS     : The error status of the proccess
 */
-void processLoop(int sharedMemId, int semId, pid_t DP1PID, pid_t DP2PID)
+void processLoop(SharedMemory* pSharedMem, int semId)
 {
-    
-
     while(shutdown == false) //until shutdown
     {
 
     }
-    killDPs(DP1PID, DP2PID);
 }
 
 
@@ -77,6 +70,17 @@ void processLoop(int sharedMemId, int semId, pid_t DP1PID, pid_t DP2PID)
 
 void shutDownHandler(int SignalNumber)
 {
+    //ensure PIDs are valid, kill and make as done
+    if (DP1PID != 0)
+    {
+        kill(DP1PID, SIGINT);
+        DP1PID = 0;
+    }
+    if (DP2PID != 0)
+    {
+        kill(DP2PID, SIGINT);
+        DP2PID = 0;
+    }
     shutdown = true;
     signal (SIGINT, shutDownHandler); //setup the sigint hanlder
 }

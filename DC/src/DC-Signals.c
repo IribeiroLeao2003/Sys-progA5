@@ -7,9 +7,3 @@
 */
 
 #include "../inc/DC.h"
-
-void killDPs(pid_t DP1PID, pid_t DP2PID)
-{
-    kill(DP1PID);
-    kill(DP2PID);
-}

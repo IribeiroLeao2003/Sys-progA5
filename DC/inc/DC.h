@@ -18,7 +18,7 @@
 
 //function prototypes
 void shutDownHandler(int SignalNumber);
-void killDPs(pid_t DP1PID, pid_t DP2PID);
 int attachToResources(SharedMemory* pSharedMem, int sharedMemId, int* semId);
-void processLoop(int sharedMemId, int semId, pid_t DP1PID, pid_t DP2PID);
+void processLoop(SharedMemory* pSharedMem, int semId);
 int closeSharedMem(int sharedMemID);
+int closeSemaphore(int semaphoreId);

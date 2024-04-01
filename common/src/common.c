@@ -6,7 +6,10 @@
 * Description: This file constants common functions for the system to use
 */
 
-#include "common.h"
+#include "../../common/inc/common.h"
+
+struct sembuf getSem = { 0, -1, SEM_UNDO };
+struct sembuf releaseSem = { 0, 1, SEM_UNDO };
 
 /*
 * FUNCTION    : initSharedMem()

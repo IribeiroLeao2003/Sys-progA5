@@ -6,6 +6,9 @@
 * Description: This file constants common structs, constants, and function prototypes for the system to use
 */
 
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ipc.h>
@@ -31,10 +34,17 @@ typedef struct{
     int writeIndex;
 }SharedMemory;
 
+
+
 //Semaphore control structs
-struct sembuf getSem = { 0, -1, SEM_UNDO };
-struct sembuf releaseSem = { 0, 1, SEM_UNDO };
+extern struct sembuf getSem;
+extern struct sembuf releaseSem;
+
+
 
 int initSharedMem(int* sharedMemID, key_t* sharedMemKey);
 int createSemaphore(int* semaphoreID, key_t* semaphoreKey);
 int attachSemaphore(int* semaphoreID);
+
+int useSemaphore(int semId);
+int releaseSemaphore(int semId);

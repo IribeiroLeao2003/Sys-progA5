@@ -19,5 +19,6 @@
 
 
 //function prototypes
+int attachToResources(SharedMemory* pSharedMem, int sharedMemId, int* semId);
 void processLoop(int sharedMemId, pid_t DP1PID, pid_t DP2PID);
 int closeSharedMem(int sharedMemID);

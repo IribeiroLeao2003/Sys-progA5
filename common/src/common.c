@@ -1,24 +1,29 @@
 #include "common.h"
 
+/*
+* FUNCTION    : initSharedMem()
+* DESCRIPTION : This function takes a pointer to the shared memory ID and shared memory key to create new shared memory if possible
+* PARAMETERS  : int* sharedMemID: A pointer to the shared memory ID so it can be modifed
+*             : key_t sharedMemKey: the key for the shared memory to use
+* RETURNS     : The error status of the proccess
+*/
+int initSharedMem(int* sharedMemID, key_t* sharedMemKey)
+{
 
+    int errorStatus = kSuccess;
+    //Check if shared memory exists
+    *sharedMemID = shmget(*sharedMemKey, sizeof(SharedMemory), kCheckExists);
 
-
-int handleSharedMemory(key_t key) {
-
-
-    int shm_id = shmget(key, kSharedMemorySize, 0644); // atemp to create shared memory
-
-    // if doesnt already exist simply create one
-    if (shm_id < 0) {
-       
-        shm_id = shmget(key, kSharedMemorySize, 0644 | IPC_CREAT);
-        if (shm_id < 0) {
+    if (*sharedMemID == kError)
+    {
+        //does not exist so create it
+        *sharedMemID = shmget(*sharedMemKey, sizeof(SharedMemory), (IPC_CREAT | 0660));
+        if (*sharedMemID == kError) //check if it failed
+        {
             perror("shmget");
-            exit(kError);
+            errorStatus = kError;
         }
-        printf("Shared memory succefully created\n");
-    } else {
-        printf("Shared memory was already created\n");
     }
-    return shm_id;
+
+    return errorStatus;
 }

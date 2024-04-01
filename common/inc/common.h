@@ -11,12 +11,15 @@
 #define kBufferSize         256
 #define kSuccess            0 
 #define kError              -1
+#define kCheckExists        0
+#define kSemaphoreID        87996 //based on Isaacs student ID
+#define kZeroFlag           0
 
 
-struct kSharedMemory {
+typedef struct{
     char buffer[kBufferSize];
     int readIndex;
     int writeIndex;
-};
+}SharedMemory;
 
 int handleSharedMemory(key_t key);

@@ -14,6 +14,7 @@
 #define kCheckExists        0
 #define kSemaphoreID        87996 //based on Isaacs student ID
 #define kZeroFlag           0
+#define kSingleUseSemaphore 0
 
 
 typedef struct{
@@ -22,4 +23,10 @@ typedef struct{
     int writeIndex;
 }SharedMemory;
 
-int handleSharedMemory(key_t key);
+//Semaphore control structs
+struct sembuf getSem = { 0, -1, SEM_UNDO };
+struct sembuf releaseSem = { 0, 1, SEM_UNDO };
+
+int initSharedMem(int* sharedMemID, key_t* sharedMemKey);
+int createSemaphore(int* semaphoreID, key_t* semaphoreKey);
+int attachSemaphore(int* semaphoreID);

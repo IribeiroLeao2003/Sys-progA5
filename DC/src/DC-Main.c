@@ -1,5 +1,7 @@
 #include "../inc/DC.h"
 
+//Free semaphore
+//semctl (semid, 0, IPC_RMID, 0); 
 
 
 
@@ -27,11 +29,20 @@ int main(int argc, char* argv[])
 void processLoop(int sharedMemId, pid_t DP1PID, pid_t DP2PID)
 {
     SharedMemory* pSharedMem = NULL;
-    while (pSharedMem == NULL)
+    while (pSharedMem == NULL) //try to attack to shared Memory
     {
         pSharedMem = (SharedMemory*) shmat(sharedMemId, NULL, kZeroFlag); //attach to memory if valid
-        sleep(kSleepTime);
+        if (pSharedMem == NULL)
+        {
+            sleep(kSleepTime);
+        }
     }
+
+    //Attached to shared memory
+    //Get semaphore
+
+
+
     
 }
 

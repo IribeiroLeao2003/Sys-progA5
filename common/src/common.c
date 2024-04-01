@@ -27,3 +27,55 @@ int initSharedMem(int* sharedMemID, key_t* sharedMemKey)
 
     return errorStatus;
 }
+
+
+int createSemaphore(int* semaphoreID, key_t* semaphoreKey)
+{
+    int errorStatus = kSuccess;
+
+    //generate key
+    *semaphoreKey = ftok("../../common/bin", kSemaphoreID); //common/bin directory
+
+    //check if semaphore exists
+    if (*semaphoreKey != kError)
+    {
+        *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, (IPC_CREAT | 0666));
+        if (*semaphoreID == kError) //check if it failed
+        {
+            perror("shmget");
+            errorStatus = kError;
+        }
+    }
+    else
+    {
+        errorStatus = kError;
+    }
+
+    return errorStatus;
+}
+
+
+int attachSemaphore(int* semaphoreID)
+{
+    int errorStatus = kSuccess;
+    key_t semKey = 0;
+    //generate key
+    semKey = ftok("../../common/bin", kSemaphoreID); //common/bin directory
+
+    //check if semaphore exists
+    if (semKey != kError)
+    {
+        *semaphoreID = semget(semKey, kSingleUseSemaphore, kCheckExists);
+        if (*semaphoreID == kError) //check if it failed
+        {
+            perror("shmget");
+            errorStatus = kError;
+        }
+    }
+    else
+    {
+        errorStatus = kError;
+    }
+
+    return errorStatus;
+}

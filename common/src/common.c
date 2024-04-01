@@ -131,3 +131,23 @@ int releaseSemaphore(int semId)
 {
     return semop(semId, &releaseSem, 1);
 }
+
+
+
+/*
+* FUNCTION    : incrementIndex()
+* DESCRIPTION : This function takes an int pointer and increments the value unless it's at the top in which case it wraps back to zero
+* PARAMETERS  : int index*: the pointer to the int to increment
+* RETURNS     : void
+*/
+void incrementIndex(int* index)
+{
+    if (*index == kBufferTop)
+    {
+        *index = 0;
+    }
+    else
+    {
+        *index++;
+    }
+}

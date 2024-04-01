@@ -19,12 +19,17 @@
 #define kSharedMemorySize   258
 #define kSemKey             0x3214
 #define kBufferSize         256
+#define kBufferTop          255
 #define kSuccess            0 
 #define kError              -1
 #define kCheckExists        0
 #define kSemaphoreID        87996 //based on Isaacs student ID
 #define kZeroFlag           0
 #define kSingleUseSemaphore 0
+#define kLettersAtoT        20
+#define kOffset             65
+#define kCapitalA           65
+#define kCaptialT           84
 
 
 typedef struct{
@@ -47,3 +52,4 @@ int attachSemaphore(int* semaphoreID);
 
 int useSemaphore(int semId);
 int releaseSemaphore(int semId);
+void incrementIndex(int* index);

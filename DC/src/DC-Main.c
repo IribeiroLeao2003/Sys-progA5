@@ -12,22 +12,22 @@
 bool shutdown = false;
 pid_t DP1PID = 0;
 pid_t DP2PID = 0;
+SharedMemory* pSharedMem = NULL;
+int semId = 0;
+int letterCounts[kLettersAtoT] = {0};
 
 
 int main(int argc, char* argv[])
 {
+    int errorStatus = kSuccess;
     if (argc == kArgsCount)
     {
         signal (SIGINT, shutDownHandler); //setup the sigint hanlder
-        
-        int errorStatus = kSuccess;
+
         //copy args
         int sharedMemId = atoi(argv[kSharedMemLoc]);
         DP1PID = atoi(argv[kDP1ProcIDLoc]);
-        DP2PID = atoi(argv[kDP2ProcIDLoc]);
-        
-        SharedMemory* pSharedMem = NULL;
-        int semId = 0;
+        DP2PID = atoi(argv[kDP2ProcIDLoc]);   
         
         //Ready to attach
         errorStatus = attachToResources(pSharedMem, sharedMemId, &semId);
@@ -41,10 +41,11 @@ int main(int argc, char* argv[])
         closeSharedMem(sharedMemId);
         releaseSemaphore(semId);
     }
-    else
-    {
-        return kError;
-    }
+
+
+    //required printf
+    printf("Shazam !!\n");
+    return errorStatus;
 }
 
 
@@ -59,15 +60,46 @@ int main(int argc, char* argv[])
 */
 void processLoop(SharedMemory* pSharedMem, int semId)
 {
+    time_t startTime = time(NULL); //get current time
     while(shutdown == false) //until shutdown
     {
+        time_t endTime = time(NULL);
+        sleep(kSleepTime);
 
+        if (startTime - endTime >= kTenSeconds) //has it been 10 seconds?
+        {
+            printData();
+            startTime = time(NULL); //new start time
+        }
+    }   
+}
+
+
+
+/*
+* FUNCTION    : printData()
+* DESCRIPTION : Prints all the data about the letter counts
+* PARAMETERS  : void
+* RETURNS     : void
+*/
+void printData()
+{
+    system("clear");//clear terminal
+    for(int i = 0; i <= kLettersAtoT; i++)
+    {
+        printf("%C-%03d\n", i+kOffset, letterCounts[i]);
     }
 }
 
 
 
 
+/*
+* FUNCTION    : shutDownHandler()
+* DESCRIPTION : Custom handler for the SIGINT call that kills the DPs and switches the shutdown bool to true
+* PARAMETERS  : int signalNumber: the int signal
+* RETURNS     : void
+*/
 void shutDownHandler(int SignalNumber)
 {
     //ensure PIDs are valid, kill and make as done
@@ -83,4 +115,33 @@ void shutDownHandler(int SignalNumber)
     }
     shutdown = true;
     signal (SIGINT, shutDownHandler); //setup the sigint hanlder
+}
+
+
+/*
+* FUNCTION    : wakeupHandler()
+* DESCRIPTION : Custom handler for the SIGALRM (wake up) signal that then reads the buffer and updates the counters
+* PARAMETERS  : int signalNumber: the int signal
+* RETURNS     : void
+*/
+void wakeupHandler(int signalNumber)
+{
+    useSemaphore(semId); //need to wait for access to shared memory
+
+    for (int i = 0; i <= kReadCount; i++)
+    {
+        char copy = pSharedMem->buffer[pSharedMem->readIndex];
+            
+        //65 (A) - offset (65) = 0 which is the A index
+        int letterCountIndex = (int) copy - kOffset;
+        letterCounts[letterCountIndex]++; //increment index
+
+        incrementIndex(&pSharedMem->readIndex); //increment
+    }
+
+
+    releaseSemaphore(semId); //release semaphore for use
+
+
+    signal (SIGALRM, shutDownHandler); //setup the sigint hanlder
 }

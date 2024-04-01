@@ -1,3 +1,11 @@
+/*
+* File: common.h
+* Project: SENG2030-24W - A-05 The Hisogram System
+* Programmer: Vivian Morton, Isaac Ribeiro Leao, Jakob Warywoda 
+* First Version: 01-04-2024
+* Description: This file constants common structs, constants, and function prototypes for the system to use
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ipc.h>

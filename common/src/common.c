@@ -1,3 +1,11 @@
+/*
+* File: common.c
+* Project: SENG2030-24W - A-05 The Hisogram System
+* Programmer: Vivian Morton, Isaac Ribeiro Leao, Jakob Warywoda 
+* First Version: 01-04-2024
+* Description: This file constants common functions for the system to use
+*/
+
 #include "common.h"
 
 /*
@@ -29,6 +37,14 @@ int initSharedMem(int* sharedMemID, key_t* sharedMemKey)
 }
 
 
+
+/*
+* FUNCTION    : createSemaphore()
+* DESCRIPTION : This function takes a pointer to the semaphore ID and semaphore key to create new semaphore if possible
+* PARAMETERS  : int* semaphoreID: A pointer to the semaphore ID so it can be modifed
+*             : key_t semaphoreKey: the key for the semaphore to use
+* RETURNS     : The error status of the proccess
+*/
 int createSemaphore(int* semaphoreID, key_t* semaphoreKey)
 {
     int errorStatus = kSuccess;
@@ -55,6 +71,14 @@ int createSemaphore(int* semaphoreID, key_t* semaphoreKey)
 }
 
 
+
+
+/*
+* FUNCTION    : attachSemaphore()
+* DESCRIPTION : This function takes a pointer to the semaphore ID and attached to a the semaphore if possible
+* PARAMETERS  : int* semaphoreID: A pointer to the semaphore ID so it can be modifed
+* RETURNS     : The error status of the proccess
+*/
 int attachSemaphore(int* semaphoreID)
 {
     int errorStatus = kSuccess;
@@ -78,4 +102,29 @@ int attachSemaphore(int* semaphoreID)
     }
 
     return errorStatus;
+}
+
+
+
+/*
+* FUNCTION    : useSemaphore()
+* DESCRIPTION : This function takes the semaphore ID and marks it as in use or waits until the semaphore is free to do so
+* PARAMETERS  : int semId: The semaphore id to use
+* RETURNS     : The results of the function call
+*/
+int useSemaphore(int semId)
+{
+    return semop(semId, &getSem, 1);
+}
+
+
+/*
+* FUNCTION    : useSemaphore()
+* DESCRIPTION : This function takes the semaphore ID and frees it from use
+* PARAMETERS  : int semId: The semaphore id to use
+* RETURNS     : The results of the function call
+*/
+int releaseSemaphore(int semId)
+{
+    return semop(semId, &releaseSem, 1);
 }

@@ -5,7 +5,7 @@ char getRandomLetter() {
 }
 
 
-void writeToBuffer(SharedMemory* shmPtr, int semId) {
+int writeToBuffer(SharedMemory* shmPtr, int semId) {
     //Define variables
     int lettWritten = 0;
     int spaceAval;
@@ -44,7 +44,7 @@ void writeToBuffer(SharedMemory* shmPtr, int semId) {
         // write the letters to buffer
         for (int i = 0; i < maxLetters; i++) {
             int nextIndex = shmPtr->writeIndex;
-            shmPtr->buffer[shmPtr->writeIndex] = generate_random_letter();
+            shmPtr->buffer[shmPtr->writeIndex] = getRandomLetter();
             incrementIndex(&(shmPtr->writeIndex));
 
             //check if we reached the read intex

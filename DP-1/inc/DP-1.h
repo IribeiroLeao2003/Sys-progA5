@@ -6,4 +6,4 @@
 #define kPathtoDP2exe       "../DP-2/bin"
 
 char getRandomLetter();
-void writeToBuffer(SharedMemory* shmPtr, int semId) ;
+int writeToBuffer(SharedMemory* shmPtr, int semId);

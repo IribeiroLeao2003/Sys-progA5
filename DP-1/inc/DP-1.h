@@ -1,4 +1,4 @@
-#include "common.h"
+#include "../../common/inc/common.h"
 
 #define kSharedMIDBuffer    10 
 #define kOneMileSecond      1000

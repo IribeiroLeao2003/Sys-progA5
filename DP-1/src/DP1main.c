@@ -2,14 +2,21 @@
 
 
 
-int main(){ 
-    //Variables
 
-    int smID;
-    key_t smuniquekey;
+
+
+//Global Variables
+int smID;
+key_t smuniquekey;
+int statusBuffer; 
+
+
+int main(){ 
     
 
-
+    
+    // will set up later
+    //signal (SIGINT, shutDownHandler);
 
     // getting shared memory key
     smuniquekey = ftok("../../common/bin", 'R'); 
@@ -46,8 +53,29 @@ int main(){
 
 
     }
-
+    
+    statusBuffer = writeToBuffer(smuniquekey, kSemaphoreID );
+    if(statusBuffer == kError){ 
+        printf("Error on writting to buffer"); 
+        return kError;
+    }
 
 
     return kSuccess;
+}
+
+
+/*
+* FUNCTION    : shutDownHandler()
+* DESCRIPTION : Custom handler for the SIGINT call that detaches DP-1 from memory
+* PARAMETERS  : int signalNumber: the int signal
+* RETURNS     : void
+*/
+void shutDownHandler()
+{
+
+    if(smuniquekey != kError){ 
+
+    }
+    signal (SIGINT, shutDownHandler); //setup the sigint hanlder
 }

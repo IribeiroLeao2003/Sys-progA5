@@ -48,7 +48,7 @@ int main(){
         sprintf(shmIDStr, "%d", smID);
 
 
-        execl(kPathtoDP2exe, "dp2", shmIDStr, (char *)NULL);
+        execl(kPathtoDP2, "dp2", shmIDStr, (char *)NULL);
 
 
 

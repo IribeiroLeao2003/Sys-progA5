@@ -28,3 +28,38 @@ DP1/DP2 must both listen for and ahndle SIGINT signal
     When caught, each DP process just detaches from shared memory and exits
         No statements
 */
+
+int shmID;
+key_t shmKey;
+pid_t DP1_pid;
+pid_t DP2_pid;
+
+
+int main(int argc, char* argv[]) {
+    // Check the arg
+    if (argc != 2) {
+        fprintf(stderr, "shared memory ID error");
+        EXIT_FAILURE;
+    }
+
+    // Store shmID passed from DP1
+    shmID = atoi(argv[1]);
+
+    // Register SIGINT handler
+
+    // Get PID of itself 
+    DP2_pid = getpid();
+    
+    // Get PID of DP1 (parent)
+    DP1_pid = getppid();
+
+    // Spawn DC
+
+    // Attach to shared memory
+
+    // Enter the main loop of writing to circlar buffer in shared memory
+
+
+
+    return kSuccess;
+}

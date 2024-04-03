@@ -15,7 +15,8 @@ int main()
     char shmIDStr[kSharedMIDBuffer];
     char pIdStr[kSharedMIDBuffer];
     int errorCode;
-    int semaphorePtr;
+    int semaphoreID;
+    key_t semaphoreKey;
 
     signal (SIGINT, shutDownHandler);
 
@@ -32,7 +33,7 @@ int main()
     // start shared memory
     if (initSharedMem(&smID, &smuniquekey) == kSuccess)
     {
-        printf("Shared memory started succefully.\n");
+        printf("Shared memory started succefully with key of %d\n", smuniquekey);
         pSharedMem = (SharedMemory *)shmat(smID, NULL, kZeroFlag); // attach to memory if valid
     }
     else
@@ -41,18 +42,28 @@ int main()
         return kError;
     }
 
-    if (createSemaphore(&semaphorePtr, &smuniquekey) == kError)
+    if (createSemaphore(&semaphoreID, &semaphoreKey) != kError)
     {
-        printf("Error creating semaphore semaphore");
-        return kError;
+        printf("Semaphore Created with unique key of %d\n", &semaphoreKey);
+
     }
+    
 
  
 
     // getting semaphore ID ready
     sprintf(shmIDStr, "%d", smID);
 
-    launchChildDP2(shmIDStr);
+    statusBuffer = writeToBuffer(pSharedMem, &semaphoreID); 
+    if(statusBuffer == kError){ 
+        printf("Error as its writting to buffer  DP-1\n");
+        return kError;
+    }
+
+    // launchChildDP2(shmIDStr);
+
+   
+
 
 }
 

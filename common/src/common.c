@@ -48,7 +48,7 @@ int initSharedMem(int* sharedMemID, key_t* sharedMemKey)
 *             : key_t semaphoreKey: the key for the semaphore to use
 * RETURNS     : The error status of the proccess
 */
-int createSemaphore(int* semaphoreID, key_t* semaphoreKey)
+int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
 {
     int errorStatus = kSuccess;
 
@@ -67,7 +67,7 @@ int createSemaphore(int* semaphoreID, key_t* semaphoreKey)
         *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, (IPC_CREAT | 0666));
         if (*semaphoreID == kError) //check if it failed
         {
-            perror("shmget");
+            perror("semget");
             errorStatus = kError;
         }
     }
@@ -122,13 +122,11 @@ int attachSemaphore(int* semaphoreID)
 * RETURNS     : The results of the function call
 */
 int useSemaphore(int semId) {
-    int result = semop(semId, &getSem, 1);
-    if (result == -1) {
-        perror("semop (waiting on semaphore) failed");
+    
+    return semop(semId, &getSem, 1);
 
-    }
-    return result;
 }
+  
 
 /*
 * FUNCTION    : useSemaphore()

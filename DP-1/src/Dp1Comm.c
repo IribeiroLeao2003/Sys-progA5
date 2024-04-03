@@ -96,12 +96,10 @@ void launchChildDP2(char *shmIDStr) {
 
     // if PID is 0 means its a child proccess
     if (pid == 0) {  
-        // turn value into string and store inside of arguments
-        sprintf(pIdStr, "%d", getpid());
-        char *args[] = {shmIDStr, pIdStr, NULL};  
 
 
-        execv(kPathtoDP2, args);
+        char *args[] = {shmIDStr, NULL};  
+        execl(kPathtoDP2, "DP-2",  args, NULL);
         perror("execl");
         exit(EXIT_FAILURE);
     } else if (pid > 0) {

@@ -47,7 +47,7 @@ extern struct sembuf releaseSem;
 
 
 int initSharedMem(int* sharedMemID, key_t* sharedMemKey);
-int createSemaphore(int* semaphoreID, key_t* semaphoreKey);
+int createSemaphore(int* semaphoreID, key_t *semaphoreKey);
 int attachSemaphore(int* semaphoreID);
 
 int useSemaphore(int semId);

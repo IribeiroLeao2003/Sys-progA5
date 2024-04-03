@@ -84,3 +84,4 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
     return kSuccess;
 }
 
+

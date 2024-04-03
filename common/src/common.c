@@ -55,6 +55,12 @@ int createSemaphore(int* semaphoreID, key_t* semaphoreKey)
     //generate key
     *semaphoreKey = ftok("../../common/bin", kSemaphoreID); //common/bin directory
 
+    // check for errors
+     if (*semaphoreKey == (key_t)kError) {
+        perror("ftok failed for semaphore");
+        return kError;
+    }
+
     //check if semaphore exists
     if (*semaphoreKey != kError)
     {

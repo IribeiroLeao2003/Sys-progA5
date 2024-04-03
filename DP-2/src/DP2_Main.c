@@ -49,12 +49,13 @@ int main(int argc, char* argv[]) {
 
     // Get PID of itself 
     DP2_pid = getpid();
-    
+
     // Get PID of DP1 (parent)
     DP1_pid = getppid();
 
     // Spawn DC
-
+    spawnDC(shmID, DP1_pid, DP2_pid);
+    
     // Attach to shared memory
 
     // Enter the main loop of writing to circlar buffer in shared memory

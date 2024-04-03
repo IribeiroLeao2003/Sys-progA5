@@ -36,16 +36,22 @@ pid_t DP2_pid;
 
 
 int main(int argc, char* argv[]) {
+    SharedMemory* pSharedMemory = NULL;
+
+
     // Check the arg
     if (argc != 2) {
         fprintf(stderr, "shared memory ID error");
-        EXIT_FAILURE;
+        exit(EXIT_FAILURE);
     }
 
     // Store shmID passed from DP1
     shmID = atoi(argv[1]);
 
     // Register SIGINT handler
+
+
+    
 
     // Get PID of itself 
     DP2_pid = getpid();
@@ -55,10 +61,17 @@ int main(int argc, char* argv[]) {
 
     // Spawn DC
     spawnDC(shmID, DP1_pid, DP2_pid);
-    
-    // Attach to shared memory
 
-    // Enter the main loop of writing to circlar buffer in shared memory
+    // Attach to shared memory
+    pSharedMemory = (SharedMemory*)shmat(shmID, NULL, kZeroFlag);
+    if (pSharedMemory == (void*)kError) {
+        // Attaching failure!
+        perror("Error attaching to shared memory");
+        // Exit app with failure
+        exit(EXIT_FAILURE);
+    }
+
+    // Enter the main loop of writing to circular buffer in shared memory
 
 
 

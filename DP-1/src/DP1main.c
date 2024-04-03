@@ -25,9 +25,12 @@ int main(){
         return kError;
     }
 
+    SharedMemory* pSharedMem = NULL;
+
     //start shared memory 
     if (initSharedMem(&smID, &smuniquekey) == kSuccess) {
         printf("Shared memory started succefully.\n");
+        pSharedMem = (SharedMemory*) shmat(smID, NULL, kZeroFlag); //attach to memory if valid
     } else {
         printf("Error in starting shared memory\n");
         return kError;
@@ -52,9 +55,17 @@ int main(){
 
 
 
+        //For DC
+        char* args[3];
+        args[0] = shmIDStr; //shared memID
+        sprintf(args[1], "%d", dpid);
+        sprintf(args[2], "%d", 0);
+        execv(kPathtoDC, args); //start with args
+
+
     }
     
-    statusBuffer = writeToBuffer(smuniquekey, kSemaphoreID );
+    statusBuffer = writeToBuffer(pSharedMem, kSemaphoreID );
     if(statusBuffer == kError){ 
         printf("Error on writting to buffer"); 
         return kError;

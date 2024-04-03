@@ -3,7 +3,8 @@
 #define kSharedMIDBuffer    10 
 #define kOneMileSecond      1000
 #define kSecondsToSleep     2
-#define kPathtoDP2exe       "../DP-2/bin"
+#define kPathtoDP2       "../../DP-2/bin/DP2"
+#define kPathtoDC       "../../DC/bin/DC"
 
 char getRandomLetter();
 int writeToBuffer(SharedMemory* shmPtr, int semId);

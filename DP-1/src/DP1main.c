@@ -4,6 +4,9 @@
 int smID;
 key_t smuniquekey;
 int statusBuffer;
+void shutDownHandler();
+
+
 
 int main()
 {
@@ -13,11 +16,11 @@ int main()
     char pIdStr[kSharedMIDBuffer];
     int errorCode;
     int semaphorePtr;
-    // will set up later
-    // signal (SIGINT, shutDownHandler);
+
+    signal (SIGINT, shutDownHandler);
 
     // getting shared memory key
-    smuniquekey = ftok("../../common/bin", 'S');
+    smuniquekey = ftok("../../common/bin", 'R');
     if (smuniquekey == kError)
     {
         perror("ftok");
@@ -44,42 +47,15 @@ int main()
         return kError;
     }
 
-    // assuming shared memory started correctly, get process ID
-    pid_t dpid = getpid();
+ 
 
-    // check for the return value
-    if (dpid < kSuccess)
-    {
-        perror("fork");
-        return kError;
-    }
-    else
-    {
+    // getting semaphore ID ready
+    sprintf(shmIDStr, "%d", smID);
 
-        // getting semaphore ID ready
-        sprintf(shmIDStr, "%d", smID);
-        sprintf(pIdStr, "%d", dpid);
+    launchChildDP2(shmIDStr);
 
-        // execl(kPathtoDP2, "dp2", shmIDStr, (char *)NULL);
-
-        // For DC
-        char *args[3];
-        args[0] = shmIDStr;
-        args[1] = pIdStr;
-        args[2] = k0String;
-
-        execv(kPathtoDC, args); // start with args
-    }
-
-    statusBuffer = writeToBuffer(pSharedMem, kSemaphoreID);
-    if (statusBuffer == kError)
-    {
-        printf("Error on writting to buffer");
-        return kError;
-    }
-
-    return kSuccess;
 }
+
 
 /*
  * FUNCTION    : shutDownHandler()
@@ -89,9 +65,10 @@ int main()
  */
 void shutDownHandler()
 {
-
-    if (smuniquekey != kError)
-    {
-    }
     signal(SIGINT, shutDownHandler); // setup the sigint hanlder
+    if (smID != kError) {
+        shmctl(smID, IPC_RMID, NULL);
+    }
+    exit(0);
+
 }

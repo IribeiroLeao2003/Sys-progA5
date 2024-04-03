@@ -85,3 +85,31 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
 }
 
 
+void launchChildDP2(char *shmIDStr) {
+    
+    char pIdStr[kSharedMIDBuffer];
+    //get pid
+    pid_t pid = fork();
+
+
+    sprintf(pIdStr, "%d", pid);
+
+    // if PID is 0 means its a child proccess
+    if (pid == 0) {  
+        // turn value into string and store inside of arguments
+        sprintf(pIdStr, "%d", getpid());
+        char *args[] = {shmIDStr, pIdStr, NULL};  
+
+
+        execv(kPathtoDP2, args);
+        perror("execl");
+        exit(EXIT_FAILURE);
+    } else if (pid > 0) {
+        // if its more than 0 means its a parent process
+    } else {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+}
+
+

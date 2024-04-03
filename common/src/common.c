@@ -121,11 +121,14 @@ int attachSemaphore(int* semaphoreID)
 * PARAMETERS  : int semId: The semaphore id to use
 * RETURNS     : The results of the function call
 */
-int useSemaphore(int semId)
-{
-    return semop(semId, &getSem, 1);
-}
+int useSemaphore(int semId) {
+    int result = semop(semId, &getSem, 1);
+    if (result == -1) {
+        perror("semop (waiting on semaphore) failed");
 
+    }
+    return result;
+}
 
 /*
 * FUNCTION    : useSemaphore()

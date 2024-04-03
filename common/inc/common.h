@@ -25,7 +25,7 @@
 #define kCheckExists        0
 #define kSemaphoreID        87996 //based on Isaacs student ID
 #define kZeroFlag           0
-#define kSingleUseSemaphore 0
+#define kSingleUseSemaphore 1
 #define kLettersAtoT        20
 #define kOffset             65
 #define kCapitalA           65

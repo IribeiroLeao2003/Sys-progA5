@@ -29,6 +29,7 @@ DP1/DP2 must both listen for and ahndle SIGINT signal
         No statements
 */
 
+// Globals
 int shmID;
 key_t shmKey;
 pid_t DP1_pid;
@@ -37,6 +38,8 @@ pid_t DP2_pid;
 
 int main(int argc, char* argv[]) {
     SharedMemory* pSharedMemory = NULL;
+    int semaphoreID = 0;
+    key_t semaphoreKey;
 
 
     // Check the arg
@@ -51,7 +54,7 @@ int main(int argc, char* argv[]) {
     // Register SIGINT handler
 
 
-    
+
 
     // Get PID of itself 
     DP2_pid = getpid();
@@ -60,7 +63,7 @@ int main(int argc, char* argv[]) {
     DP1_pid = getppid();
 
     // Spawn DC
-    spawnDC(shmID, DP1_pid, DP2_pid);
+    spawnDC(shmID, DP1_pid);
 
     // Attach to shared memory
     pSharedMemory = (SharedMemory*)shmat(shmID, NULL, kZeroFlag);

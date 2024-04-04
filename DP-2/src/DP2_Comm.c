@@ -47,3 +47,38 @@ void spawnDC(int* shmID, pid_t DP1_pid) {
     }
 
 }
+
+
+/*
+* FUNCTION    : getRandomLetter()
+* DESCRIPTION : Function that returns a random letter from a to t
+* PARAMETERS  : None
+* RETURNS     : A random char
+*/
+char getRandomLetter() {
+    return 'a' + rand() % ('t' - 'a' + 1);
+}
+
+
+int writeLetterToBuffer(SharedMemory* pSharedMemory, int semID) {
+
+}
+
+
+int getSemaphoreInfo(int* semaphoreID, key_t* semaphoreKey) {
+    // Generate the semaphore key using ftok
+    *semaphoreKey = ftok(kPathCommonBin, kSemaphoreID); // ../../common/bin
+    if (*semaphoreKey == (key_t)kError) {
+        perror("ftok failure - semaphore error DP2");
+        return kError;
+    }
+
+    // Get the ID
+    *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, kZeroFlag);
+    if (*semaphoreID == kError) {
+        perror("semget error - DP2");
+        return kError;
+    }
+
+    return kSuccess;
+}

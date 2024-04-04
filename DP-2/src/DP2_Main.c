@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
     else{ 
-        printf("Shared memory attatched succefully!\n");
+        printf("Shared memory attached succesfully!\n");
     }
 
     // Get the semaphore information

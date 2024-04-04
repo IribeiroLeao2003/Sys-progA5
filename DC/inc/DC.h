@@ -10,10 +10,10 @@
 #include <time.h>
 
 //CMD Args
-#define kSharedMemLoc      0
-#define kDP1ProcIDLoc      1
-#define kDP2ProcIDLoc      2
-#define kArgsCount         3
+#define kSharedMemLoc      1
+#define kDP1ProcIDLoc      2
+#define kDP2ProcIDLoc      3
+#define kArgsCount         4
 #define kReadCount         20
 #define kSymbolsLength     11
 

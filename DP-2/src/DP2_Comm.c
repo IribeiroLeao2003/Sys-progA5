@@ -16,7 +16,7 @@ void spawnDC(int* shmID, pid_t DP1_pid, pid_t DP2_pid) {
     execl(kPathToDCexe, kDCProcessName, shmID_string, DP1_p, DP2_p, (char *)NULL);
 } */
 
-void spawnDC(int* shmID, pid_t DP1_pid) {
+void spawnDC(int shmID, pid_t DP1_pid) {
     // Char buffers for passing when spawning DC
     char shmID_string[kshmIDBufferSize];
     char DP1_p[kPIDSize];

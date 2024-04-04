@@ -1,7 +1,7 @@
 #include "../../common/inc/common.h"
 
-#define kPathToDCexe    "../../DC/bin/dc"
-#define kDCProcessName  "dc"
+#define kPathToDCexe    "../../DC/bin/DC"
+#define kDCProcessName  "DC"
 
 #define kshmIDBufferSize    10
 #define kPIDSize            10

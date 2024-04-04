@@ -44,7 +44,7 @@ int main()
 
     if (createSemaphore(&semaphoreID, &semaphoreKey) != kError)
     {
-        printf("Semaphore Created with unique key of %d\n", &semaphoreKey);
+        printf("Semaphore Created with unique key of %d\n", semaphoreKey);
 
     }
     
@@ -54,7 +54,7 @@ int main()
     // getting semaphore ID ready
     sprintf(shmIDStr, "%d", smID);
 
-    statusBuffer = writeToBuffer(pSharedMem, &semaphoreID); 
+    statusBuffer = writeToBuffer(pSharedMem, semaphoreID); 
     if(statusBuffer == kError){ 
         printf("Error as its writting to buffer  DP-1\n");
         return kError;

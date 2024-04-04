@@ -3,6 +3,7 @@
 
 
 
+
 /*
 * FUNCTION    : getRandomLetter()
 * DESCRIPTION : Function that returns a random letter from a to t
@@ -26,12 +27,20 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
     int spaceAval;
     int maxLetters = kLettersAtoT; 
 
+    if (semctl(semId, 0, SETVAL, 1) == kError) {
+        perror("semctl SETVAL failed");
+        exit(EXIT_FAILURE);
+    }
+
 
     while (lettWritten < maxLetters) {
         // Get semaphore for atomic access
         if (useSemaphore(semId) == kError) {
-            perror("useSemaphore error");
+            fprintf(stderr, "useSemaphore failed: %s\n", strerror(errno));
             return kError;
+        }
+        else { 
+            printf ("Entering critical region  DP-1\n");
         }
 
         // Calculate space available to write and change lettersToWrite if necessary

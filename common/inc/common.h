@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <errno.h>
 
 #define kSharedMemorySize   258
 #define kSemKey             0x3214

@@ -15,11 +15,18 @@ int main()
     char shmIDStr[kSharedMIDBuffer];
     char pIdStr[kSharedMIDBuffer];
     int errorCode;
-    int semaphoreID;
+    int semaphoreID = 0;
     key_t semaphoreKey;
 
     signal (SIGINT, shutDownHandler);
 
+    if (createSemaphore(&semaphoreID, &semaphoreKey) != kError)
+    {
+        printf("Semaphore Created with unique ID of  %d\n", semaphoreID);
+
+    }
+    
+    
     // getting shared memory key
     smuniquekey = ftok("../../common/bin", 'R');
     if (smuniquekey == kError)
@@ -42,12 +49,7 @@ int main()
         return kError;
     }
 
-    if (createSemaphore(&semaphoreID, &semaphoreKey) != kError)
-    {
-        printf("Semaphore Created with unique key of %d\n", semaphoreKey);
-
-    }
-    
+   
 
  
 

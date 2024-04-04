@@ -53,7 +53,7 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
     int errorStatus = kSuccess;
 
     //generate key
-    *semaphoreKey = ftok("../../common", kSemaphoreID); //common/bin directory
+    *semaphoreKey = ftok("../../common/bin", kSemaphoreID); //common/bin directory
 
     // check for errors
      if (*semaphoreKey == (key_t)kError) {
@@ -67,7 +67,7 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
     //doesn't exist
     if (*semaphoreID == kError)
     {
-        *semaphoreID = semget(54715, kSingleUseSemaphore, (IPC_CREAT | 0666));
+        *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, IPC_CREAT | 0666);
         if (*semaphoreID == kError) //check if it failed
         {
             perror("semget");
@@ -125,8 +125,10 @@ int attachSemaphore(int* semaphoreID)
 * RETURNS     : The results of the function call
 */
 int useSemaphore(int semId) {
-    
-    return semop(semId, &getSem, 1);
+    int result = semop(semId, &getSem, 1);
+
+
+    return result; 
 
 }
   

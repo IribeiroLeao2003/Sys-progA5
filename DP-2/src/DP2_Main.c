@@ -40,6 +40,7 @@ int main(int argc, char* argv[]) {
     SharedMemory* pSharedMemory = NULL;
     int semaphoreID = 0;
     key_t semaphoreKey;
+    int semaphoreResult;
 
 
     // Check the arg
@@ -74,8 +75,20 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // Enter the main loop of writing to circular buffer in shared memory
+    // Get the semaphore information
+    semaphoreResult = getSemaphoreInfo(&semaphoreID, &semaphoreKey);
+    if (semaphoreResult == kError) {
+        perror("Semaphore failure - DP2");
+        exit(EXIT_FAILURE);
+    }
 
+    // Enter the main loop of writing to circular buffer in shared memory
+    while(true) {
+        int writeResult = writeLetterToBuffer(pSharedMemory, semaphoreID);
+
+        // Sleep for 1/20th second (50,000 microseconds)
+        usleep(kOneTwentieth);
+    }
 
 
     return kSuccess;

@@ -28,3 +28,4 @@ int closeSharedMem(int sharedMemID);
 int closeSemaphore(int semaphoreId);
 void printData();
 void createSymbols(char symbols[], int letterCount);
+void wakeupHandler(int signalNumber);

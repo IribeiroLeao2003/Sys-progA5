@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
     if (argc == kArgsCount)
     {
         signal (SIGINT, shutDownHandler); //setup the sigint hanlder
+        signal (SIGALRM, wakeupHandler); //setup the wakeup hanlder
 
         //copy args
         int sharedMemId = atoi(argv[kSharedMemLoc]);
@@ -33,12 +34,14 @@ int main(int argc, char* argv[])
         
         //Ready to attach
         errorStatus = attachToResources(pSharedMem, sharedMemId, &semId);
+        printf("shared mem id: %d\nsemID: %d\n", sharedMemId, semId);
 
         if (errorStatus != kError)
         {
             processLoop(pSharedMem, semId);
         }
 
+        printf("Closing shared mem and sem\n");
         //Done process loop so shutdown
         closeSharedMem(sharedMemId);
         releaseSemaphore(semId);
@@ -62,16 +65,21 @@ int main(int argc, char* argv[])
 */
 void processLoop(SharedMemory* pSharedMem, int semId)
 {
-    time_t startTime = time(NULL); //get current time
+    printf("In proccess loop\n");
+    int sleepCount = 0;
     while(shutdown == false) //until shutdown
     {
+        printf("Sleeping for 2 seconds\n");
         time_t endTime = time(NULL);
         sleep(kSleepTime);
-
-        if (startTime - endTime >= kTenSeconds) //has it been 10 seconds?
+        sleepCount += 2;
+        //alarm(1);
+        wakeupHandler(1);
+        if (sleepCount >= kTenSeconds) //has it been 10 seconds?
         {
+            printf("Inside PrintData\n");
             printData();
-            startTime = time(NULL); //new start time
+            sleepCount = 0;
         }
     }   
 }
@@ -156,8 +164,9 @@ void shutDownHandler(int SignalNumber)
 */
 void wakeupHandler(int signalNumber)
 {
+    printf("Wakeup Handler!\n");
     useSemaphore(semId); //need to wait for access to shared memory
-
+    printf("Finished useSemaphore!\n");
     for (int i = 0; i <= kReadCount; i++)
     {
         char copy = pSharedMem->buffer[pSharedMem->readIndex];
@@ -168,10 +177,10 @@ void wakeupHandler(int signalNumber)
 
         incrementIndex(&pSharedMem->readIndex); //increment
     }
-
+    printf("Finished copy!\n");
 
     releaseSemaphore(semId); //release semaphore for use
+    printf("Finished release!\n");
 
-
-    signal (SIGALRM, shutDownHandler); //setup the sigint hanlder
+    signal (SIGALRM, wakeupHandler); //setup the sigint hanlder
 }

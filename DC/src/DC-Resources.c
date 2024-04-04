@@ -28,11 +28,18 @@ int attachToResources(SharedMemory* pSharedMem, int sharedMemId, int* pSemId)
         }
     }
 
+    // initilize semaphore, this doesn't do anything from what I saw
+    if (semctl(*pSemId, 0, SETVAL, 1) == kError) {
+        errorStatus = kError;
+        perror(strerror(errno));
+    }
+
     //Get semaphore
-    *pSemId = attachSemaphore(pSemId);
+    attachSemaphore(pSemId);
     if (*pSemId == kError)
     {
         errorStatus = kError;
+        perror(strerror(errno));
     }
 
     return errorStatus;
@@ -51,7 +58,7 @@ int closeSharedMem(int sharedMemID)
     
     if (shmctl(sharedMemID, IPC_RMID, NULL) == kError) //try to close the message queue
     {
-        perror("Failed Shared Memory Close"); //note any errors from closing
+        perror(strerror(errno)); //note any errors from closing
         errorStatus = kError;
     }
 
@@ -72,7 +79,7 @@ int closeSemaphore(int semaphoreId)
     
     if (semctl (semaphoreId, 0, IPC_RMID, 0) == kError) //try to close semaphore
     {
-        perror("Failed Semaphore Close"); //note any errors from closing
+        perror(strerror(errno)); //note any errors from closing
         errorStatus = kError;
     }
 

@@ -90,7 +90,7 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
 * DESCRIPTION : This function takes a pointer to the semaphore ID and attached to a the semaphore if possible
 * PARAMETERS  : int* semaphoreID: A pointer to the semaphore ID so it can be modifed
 * RETURNS     : The error status of the proccess
-*/
+
 int attachSemaphore(int* semaphoreID)
 {
     int errorStatus = kSuccess;
@@ -115,7 +115,29 @@ int attachSemaphore(int* semaphoreID)
 
     return errorStatus;
 }
+*/
 
+int attachSemaphore(int* semaphoreID) {
+    // Generate the semaphore key using ftok
+    key_t semaphoreKey;
+    semaphoreKey = ftok("../../common/bin", kSemaphoreID); // ../../common/bin
+    if (semaphoreKey == (key_t)kError) {
+        perror("ftok failure - semaphore error DP2");
+        return kError;
+    }
+
+    printf("Key: %d\n", semaphoreKey);
+
+    // Get the ID
+    *semaphoreID = semget(semaphoreKey, kSingleUseSemaphore, kZeroFlag);
+    if (*semaphoreID == kError) {
+        perror("semget error - DP2");
+        return kError;
+    }
+    printf("ID: %d\n", *semaphoreID);
+
+    return kSuccess;
+}
 
 
 /*
@@ -126,10 +148,11 @@ int attachSemaphore(int* semaphoreID)
 */
 int useSemaphore(int semId) {
     int result = semop(semId, &getSem, 1);
-
-
+    if (result ==kError)
+    {
+        perror(strerror(errno));
+    }
     return result; 
-
 }
   
 
@@ -141,7 +164,12 @@ int useSemaphore(int semId) {
 */
 int releaseSemaphore(int semId)
 {
-    return semop(semId, &releaseSem, 1);
+    int result = semop(semId, &releaseSem, 1);
+    if (result ==kError)
+    {
+        perror(strerror(errno));
+    }
+    return result;
 }
 
 

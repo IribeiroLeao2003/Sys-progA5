@@ -27,6 +27,8 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
     int spaceAval;
     int maxLetters = kLettersAtoT; 
 
+
+    // initilize semaphore
     if (semctl(semId, 0, SETVAL, 1) == kError) {
         perror("semctl SETVAL failed");
         exit(EXIT_FAILURE);

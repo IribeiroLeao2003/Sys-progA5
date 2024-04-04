@@ -160,6 +160,6 @@ void incrementIndex(int* index)
     }
     else
     {
-        *index++;
+        (*index)++;
     }
 }

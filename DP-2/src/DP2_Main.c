@@ -34,12 +34,15 @@ int shmID;
 key_t shmKey;
 pid_t DP1_pid;
 pid_t DP2_pid;
+SharedMemory* pSharedMemory = NULL;
+int semaphoreID = 0;
+key_t semaphoreKey;
+
+volatile sig_atomic_t running = 1;
 
 
 int main(int argc, char* argv[]) {
-    SharedMemory* pSharedMemory = NULL;
-    int semaphoreID = 0;
-    key_t semaphoreKey;
+    
     int semaphoreResult;
 
 

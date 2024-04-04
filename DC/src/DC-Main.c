@@ -20,6 +20,7 @@ int letterCounts[kLettersAtoT] = {0};
 int main(int argc, char* argv[])
 {
     printf("Arg count: %d\n", argc);
+    printf("%s\n%s\n%s\n%s\n", argv[0], argv[1], argv[2], argv[3]);
     int errorStatus = kSuccess;
     if (argc == kArgsCount)
     {
@@ -45,7 +46,7 @@ int main(int argc, char* argv[])
 
 
     //required printf
-    printf("Shazam !!\n");
+    printf("\nShazam !!\n");
     return errorStatus;
 }
 

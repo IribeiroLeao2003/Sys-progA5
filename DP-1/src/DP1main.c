@@ -4,6 +4,7 @@
 int smID;
 key_t smuniquekey;
 int statusBuffer;
+    int semaphoreID = 0;
 void shutDownHandler();
 
 
@@ -15,7 +16,7 @@ int main()
     char shmIDStr[kSharedMIDBuffer];
     char pIdStr[kSharedMIDBuffer];
     int errorCode;
-    int semaphoreID = 0;
+
     key_t semaphoreKey;
 
     signal (SIGINT, shutDownHandler);
@@ -24,6 +25,10 @@ int main()
     {
         printf("Semaphore Created with unique ID of  %d\n", semaphoreID);
 
+    }
+    else {
+        printf("Semaphore create failed\n");
+        return kError;
     }
     
     
@@ -82,6 +87,9 @@ void shutDownHandler()
     signal(SIGINT, shutDownHandler); // setup the sigint hanlder
     if (smID != kError) {
         shmctl(smID, IPC_RMID, NULL);
+    }
+    if (semctl(semaphoreID, 0, IPC_RMID) == -1) {
+        perror("Failed to destroy semaphore in signal handler");
     }
     exit(0);
 

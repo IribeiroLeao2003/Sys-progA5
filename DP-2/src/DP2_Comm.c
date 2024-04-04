@@ -109,12 +109,14 @@ int getSemaphoreInfo(int* semaphoreID, key_t* semaphoreKey) {
         return kError;
     }
 
+    printf("DP2 semKey is : %d\n", *semaphoreKey);
     // Get the ID
     *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, kZeroFlag);
     if (*semaphoreID == kError) {
         perror("semget error - DP2");
         return kError;
     }
+    printf("DP2 semID is : %d\n", *semaphoreID);
 
     return kSuccess;
 }

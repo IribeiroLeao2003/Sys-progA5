@@ -44,7 +44,6 @@ int main(int argc, char* argv[])
         printf("Closing shared mem and sem\n");
         //Done process loop so shutdown
         closeSharedMem(sharedMemId);
-        releaseSemaphore(semId);
     }
 
 
@@ -152,6 +151,11 @@ void shutDownHandler(int SignalNumber)
         DP2PID = 0;
     }
     shutdown = true;
+
+        if (semctl(semId, 0, IPC_RMID) == kError) {
+        perror("Failed to destroy semaphore in signal handler");
+    }
+
     signal (SIGINT, shutDownHandler); //setup the sigint hanlder
 }
 
@@ -165,7 +169,7 @@ void shutDownHandler(int SignalNumber)
 void wakeupHandler(int signalNumber)
 {
     printf("Wakeup Handler!\n");
-    useSemaphore(semId); //need to wait for access to shared memory
+    useSemaphore(semId); //need to wait for access to semaphore
     printf("Finished useSemaphore!\n");
     for (int i = 0; i <= kReadCount; i++)
     {

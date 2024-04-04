@@ -81,7 +81,7 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
             }
         }
 
-       printf ("Releasing semaphore DP-1\n");
+         printf ("Releasing semaphore DP-1\n");
         //After finishing writting, release semaphore using semID
         if (releaseSemaphore(semId) == kError) {
             perror("releaseSemaphore");

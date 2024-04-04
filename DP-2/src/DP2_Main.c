@@ -43,6 +43,8 @@ volatile sig_atomic_t running = 1;
 
 int main(int argc, char* argv[]) {
     int semaphoreResult;
+    int writeCounter = 0;
+
     // Check the arg
     if (argc != 2) {
         fprintf(stderr, "shared memory ID error");
@@ -90,11 +92,15 @@ int main(int argc, char* argv[]) {
     while(running) {
         int writeResult = writeLetterToBuffer(pSharedMemory, semaphoreID);
 
+        if (writeResult == kSuccess) {
+            writeCounter++;
+        }
+        
         // Sleep for 1/20th second (50,000 microseconds)
         usleep(kOneTwentieth);
     }
 
-
+    printf("DP2 wrote %d times\n", writeCounter);
     return kSuccess;
 }
 

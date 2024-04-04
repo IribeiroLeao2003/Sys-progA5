@@ -71,6 +71,7 @@ int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID) {
     int nextBufferPosition = (pSharedMemory->writeIndex + 1) % kBufferSize; // Circular!
     // Ensure the next writing position isn't where the read index is
     if (nextBufferPosition == pSharedMemory->readIndex) {
+        printf("DP2 doesn't want to overtake readIndex\n");
         return kDontWrite;
     } else {
         // We can write b/c position is before or after reading index

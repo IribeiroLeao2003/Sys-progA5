@@ -7,4 +7,5 @@
 #define kPIDSize            10
 
 
-void spawnDC(int* shmID, pid_t DP1_pid, pid_t DP2_pid);
+// void spawnDC(int* shmID, pid_t DP1_pid, pid_t DP2_pid);
+void spawnDC(int* shmID, pid_t DP1_pid);

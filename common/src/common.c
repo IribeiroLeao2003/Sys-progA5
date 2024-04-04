@@ -49,7 +49,8 @@ int initSharedMem(int* sharedMemID, key_t* sharedMemKey)
 * RETURNS     : The error status of the proccess
 */
 int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
-{
+{   
+    const unsigned short init_values[1] = { 1 };
     int errorStatus = kSuccess;
 
     //generate key
@@ -61,23 +62,19 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
         return kError;
     }
 
-    //check if semaphore exists
-    *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, kZeroFlag);
-
-    //doesn't exist
-    if (*semaphoreID == kError)
+    *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, IPC_CREAT | 0666);
+    if (*semaphoreID == kError) //check if it failed
     {
-        *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, IPC_CREAT | 0666);
-        if (*semaphoreID == kError) //check if it failed
-        {
-            perror("semget");
-            errorStatus = kError;
-        }
-    }
-    else
-    {
+        perror("semget");
         errorStatus = kError;
     }
+
+    if (semctl(*semaphoreID, 0, SETALL, init_values) == kError) 
+	{
+        printf ("Semaphore Cant be initilized\n");
+        return kError;
+	}
+
 
     return errorStatus;
 }

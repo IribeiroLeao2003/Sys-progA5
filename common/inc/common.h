@@ -5,6 +5,9 @@
 * First Version: 01-04-2024
 * Description: This file contains common structs, constants, and function prototypes for the system to use
 */
+#ifndef __COMMONH__
+#define __COMMONH__
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +36,12 @@
 #define kCaptialT           84
 
 
+
+
+
+
+
+
 typedef struct{
     char buffer[kBufferSize];
     int readIndex;
@@ -54,3 +63,6 @@ int attachSemaphore(int* semaphoreID);
 int useSemaphore(int semId);
 int releaseSemaphore(int semId);
 void incrementIndex(int* index);
+
+
+#endif

@@ -28,12 +28,7 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
     int maxLetters = kLettersAtoT; 
 
 
-    // initilize semaphore
-    if (semctl(semId, 0, SETVAL, 1) == kError) {
-        perror("semctl SETVAL failed");
-        exit(EXIT_FAILURE);
-    }
-
+  
 
     while (lettWritten < maxLetters) {
         // Get semaphore for atomic access
@@ -80,8 +75,7 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
                 break; 
             }
         }
-
-         printf ("Releasing semaphore DP-1\n");
+         printf ("Ammount of letters written %d/Releasing semaphore DP-1\n", lettWritten);
         //After finishing writting, release semaphore using semID
         if (releaseSemaphore(semId) == kError) {
             perror("releaseSemaphore");
@@ -89,6 +83,7 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
         }
 
         lettWritten += maxLetters;
+     
 
         //check if limit was reached, if yes sleep for 2 seconds
         if (lettWritten == kLettersAtoT) {
@@ -100,32 +95,32 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
 
 
 void launchChildDP2(int smID) {
-    
-    char pIdStr[kSharedMIDBuffer];
+    char args[30];
     //get pid
     pid_t pid = fork();
 
+    switch (pid)
+    {
+    case kError:
+        perror("fork");
+        exit(EXIT_FAILURE);
+        break;
 
-    sprintf(pIdStr, "%d", pid);
-
-    // if PID is 0 means its a child proccess
-    if (pid == 0) {  
-
-        printf("Im the child, and my PID is %d DP1\n", pid);
-        char args[30];
+    case 0 : 
+        printf("Im the child, and my PID is %d - DP1\n", pid);
         sprintf(args, "%d", smID);
         printf("Sending %s DP1\n", args);
         execl(kPathtoDP2, "DP-2",  args, NULL);
         perror("execl");
         exit(EXIT_FAILURE);
-    } else if (pid > 0) {
-
+        break;
+    
+    default:
         printf("Im the parent, and my PID is %d\n", pid);
         // if its more than 0 means its a parent process
-    } else {
-        perror("fork");
-        exit(EXIT_FAILURE);
+        break;
     }
+
 }
 
 

@@ -27,7 +27,13 @@ int main()
 
     }
     else {
+
+        //Destroy semaphore if creation failed 
         printf("Semaphore create failed\n");
+
+        if (semctl(semaphoreID, 0, IPC_RMID) == kError) {
+            perror("Failed to destroy semaphore in signal handler");
+        }
         return kError;
     }
     
@@ -60,7 +66,7 @@ int main()
 
     launchChildDP2(smID);
 
- 
+   
 
     statusBuffer = writeToBuffer(pSharedMem, semaphoreID); 
     if(statusBuffer == kError){ 

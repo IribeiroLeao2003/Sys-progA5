@@ -1,0 +1,31 @@
+# !/bin/bash
+#
+# FILE :            Make_Program
+# PROJECT :         A-05 : THE Histogram SYSTEM
+# PROGRAMMER :      Isaac Ribeiro Leao, Vivian Morton and Jake Warywoda
+# DESCRIPTION :     Makes all the files
+#
+
+
+#Make DC
+cd DC
+make clean
+make
+cd ..
+
+#Make the DR
+cd DP-1
+make clean
+make
+cd ..
+
+#Make the DX
+cd DP-2
+make clean
+make
+cd ..
+
+#copy the DR and DX to common
+#cd common/bin
+#cp ../../DR/bin/dr dr
+#cp ../../DX/bin/dx dx

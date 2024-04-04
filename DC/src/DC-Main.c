@@ -19,6 +19,7 @@ int letterCounts[kLettersAtoT] = {0};
 
 int main(int argc, char* argv[])
 {
+    printf("Arg count: %d\n", argc);
     int errorStatus = kSuccess;
     if (argc == kArgsCount)
     {

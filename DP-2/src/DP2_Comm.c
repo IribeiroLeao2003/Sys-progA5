@@ -60,8 +60,36 @@ char getRandomLetter() {
 }
 
 
-int writeLetterToBuffer(SharedMemory* pSharedMemory, int semID) {
+int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID) {
+    // First lets lock the semaphore
+    if (semop(semaphoreID, &getSem, 1) == kError) {
+        perror("semop lock error - DP2");
+        exit(EXIT_FAILURE);
+    }
 
+    // Check our index positions
+    int nextBufferPosition = (pSharedMemory->writeIndex + 1) % kBufferSize; // Circular!
+    // Ensure the next writing position isn't where the read index is
+    if (nextBufferPosition == pSharedMemory->readIndex) {
+        return kDontWrite;
+    } else {
+        // We can write b/c position is before or after reading index
+        // Get the letter
+        char letter = getRandomLetter();
+        // Write to the current index position then update to next 
+        pSharedMemory->buffer[pSharedMemory->writeIndex] = letter;
+        
+        // Update index position
+        pSharedMemory->writeIndex = nextBufferPosition;
+    }
+
+    // Unlock semaphore
+    if (semop(semaphoreID, &releaseSem, 1) == kError) {
+        perror("semop unlock error - DP2");
+        exit(EXIT_FAILURE);
+    }
+
+    return kSuccess;
 }
 
 

@@ -28,14 +28,16 @@ int attachToResources(SharedMemory* pSharedMem, int sharedMemId, int* pSemId)
         }
     }
 
+    /*
     // initilize semaphore, this doesn't do anything from what I saw
     if (semctl(*pSemId, 0, SETVAL, 1) == kError) {
         errorStatus = kError;
         perror(strerror(errno));
-    }
+    } */
 
     //Get semaphore
     attachSemaphore(pSemId);
+    printf("Attached to semaphore in DC - <%d>\n", *pSemId);
     if (*pSemId == kError)
     {
         errorStatus = kError;

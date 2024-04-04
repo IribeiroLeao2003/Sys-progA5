@@ -25,6 +25,10 @@ int main()
         printf("Semaphore Created with unique ID of  %d\n", semaphoreID);
 
     }
+    else {
+        printf("Semaphore create failed\n");
+        return kError;
+    }
     
     
     // getting shared memory key

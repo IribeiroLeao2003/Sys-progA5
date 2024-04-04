@@ -109,7 +109,7 @@ void launchChildDP2(int smID) {
     sprintf(pIdStr, "%d", pid);
 
     // if PID is 0 means its a child proccess
-    if (pid > 0) {  
+    if (pid == 0) {  
 
         printf("Im the child, and my PID is %d DP1\n", pid);
         char args[30];

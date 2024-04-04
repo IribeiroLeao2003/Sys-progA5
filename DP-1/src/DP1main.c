@@ -28,7 +28,7 @@ int main()
     
     
     // getting shared memory key
-    smuniquekey = ftok("../../common/bin", 'R');
+    smuniquekey = ftok(".", 'R');
     if (smuniquekey == kError)
     {
         perror("ftok");
@@ -49,12 +49,13 @@ int main()
         return kError;
     }
 
-   
+      // getting semaphore ID ready
+
+    printf("Sending %d DP1\n", smID);
+
+    launchChildDP2(smID);
 
  
-
-    // getting semaphore ID ready
-    sprintf(shmIDStr, "%d", smID);
 
     statusBuffer = writeToBuffer(pSharedMem, semaphoreID); 
     if(statusBuffer == kError){ 
@@ -62,7 +63,7 @@ int main()
         return kError;
     }
 
-    // launchChildDP2(shmIDStr);
+    
 
    
 

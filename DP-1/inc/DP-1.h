@@ -9,4 +9,4 @@
 
 char getRandomLetter();
 int writeToBuffer(SharedMemory* shmPtr, int semId);
-void launchChildDP2(char *shmIDStr);
+void launchChildDP2(int smID);

@@ -43,7 +43,6 @@ volatile sig_atomic_t running = 1;
 
 int main(int argc, char* argv[]) {
     int semaphoreResult;
-
     // Check the arg
     if (argc != 2) {
         fprintf(stderr, "shared memory ID error");
@@ -52,6 +51,7 @@ int main(int argc, char* argv[]) {
 
     // Store shmID passed from DP1
     shmID = atoi(argv[1]);
+ 
 
     // Register SIGINT handler
     signal(SIGINT, sigintHandler);
@@ -65,6 +65,8 @@ int main(int argc, char* argv[]) {
     // Spawn DC
     spawnDC(shmID, DP1_pid);
 
+
+
     // Attach to shared memory
     pSharedMemory = (SharedMemory*)shmat(shmID, NULL, kZeroFlag);
     if (pSharedMemory == (void*)kError) {
@@ -72,6 +74,9 @@ int main(int argc, char* argv[]) {
         perror("Error attaching to shared memory");
         // Exit app with failure
         exit(EXIT_FAILURE);
+    }
+    else{ 
+        printf("Shared memory attatched succefully!\n");
     }
 
     // Get the semaphore information

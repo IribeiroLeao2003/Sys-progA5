@@ -54,6 +54,7 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
 
         if (spaceAval <= 0) {
             //if there is no more space simply release the semaphore
+            printf ("Releasing Semaphore  DP-1\n");
             releaseSemaphore(semId);
 
             //sleep for one milesecond
@@ -75,10 +76,12 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
 
             //check if we reached the read intex
             if (nextIndex == shmPtr->readIndex) {
+                printf ("Read Index Reached ! DP-1\n");
                 break; 
             }
         }
 
+       printf ("Releasing semaphore DP-1\n");
         //After finishing writting, release semaphore using semID
         if (releaseSemaphore(semId) == kError) {
             perror("releaseSemaphore");
@@ -96,7 +99,7 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
 }
 
 
-void launchChildDP2(char *shmIDStr) {
+void launchChildDP2(int smID) {
     
     char pIdStr[kSharedMIDBuffer];
     //get pid
@@ -106,14 +109,18 @@ void launchChildDP2(char *shmIDStr) {
     sprintf(pIdStr, "%d", pid);
 
     // if PID is 0 means its a child proccess
-    if (pid == 0) {  
+    if (pid > 0) {  
 
-
-        char *args[] = {shmIDStr, NULL};  
+        printf("Im the child, and my PID is %d DP1\n", pid);
+        char args[30];
+        sprintf(args, "%d", smID);
+        printf("Sending %s DP1\n", args);
         execl(kPathtoDP2, "DP-2",  args, NULL);
         perror("execl");
         exit(EXIT_FAILURE);
     } else if (pid > 0) {
+
+        printf("Im the parent, and my PID is %d\n", pid);
         // if its more than 0 means its a parent process
     } else {
         perror("fork");

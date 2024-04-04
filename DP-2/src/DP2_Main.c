@@ -42,9 +42,7 @@ volatile sig_atomic_t running = 1;
 
 
 int main(int argc, char* argv[]) {
-    
     int semaphoreResult;
-
 
     // Check the arg
     if (argc != 2) {
@@ -56,9 +54,7 @@ int main(int argc, char* argv[]) {
     shmID = atoi(argv[1]);
 
     // Register SIGINT handler
-
-
-
+    signal(SIGINT, sigintHandler);
 
     // Get PID of itself 
     DP2_pid = getpid();
@@ -86,7 +82,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Enter the main loop of writing to circular buffer in shared memory
-    while(true) {
+    while(running) {
         int writeResult = writeLetterToBuffer(pSharedMemory, semaphoreID);
 
         // Sleep for 1/20th second (50,000 microseconds)
@@ -95,4 +91,18 @@ int main(int argc, char* argv[]) {
 
 
     return kSuccess;
+}
+
+
+void sigintHandler(int sig) {
+    // Flag exiting the loop
+    running = 0;
+
+    // Detach from shared memory
+    if (pSharedMemory != NULL) {
+        if (shmdt(pSharedMemory) == kError) {
+            perror("shmdt error - DP2");
+        }
+        pSharedMemory = NULL;
+    }
 }

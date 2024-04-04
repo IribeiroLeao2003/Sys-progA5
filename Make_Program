@@ -25,6 +25,10 @@ make clean
 make
 cd ..
 
+# Open DP-1/bin to quickly start testing
+cd DP-1/bin
+exec bash
+
 #copy the DR and DX to common
 #cd common/bin
 #cp ../../DR/bin/dr dr

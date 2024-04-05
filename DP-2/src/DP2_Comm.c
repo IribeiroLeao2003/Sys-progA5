@@ -1,21 +1,25 @@
+/*
+ *  File            :   DP2_Comm.c
+ *  Project         :   SENG2030-24W - A-05 The Histogram System
+ *  Programmer      :   Jake Warywoda, Vivian Morton, Isaac Ribeiro Leao
+ *  First Version   :   02-04-2024
+ *  Description     :   This file contains the functions pertinent to the second
+ *                      data producing process (DP2)
+*/
+
+
 #include "DP2.h"
 
+
 /*
-void spawnDC(int* shmID, pid_t DP1_pid, pid_t DP2_pid) {
-    // Char buffers for passing when spawning DC
-    char shmID_string[kshmIDBufferSize];
-    char DP1_p[kPIDSize];
-    char DP2_p[kPIDSize];
-
-    // Fill the buffers
-    sprintf(shmID_string, "%d", shmID);
-    sprintf(DP1_p, "%d", DP1_pid);
-    sprintf(DP2_p, "%d", DP2_pid);
-
-    // Use execl with our 3 args to pass
-    execl(kPathToDCexe, kDCProcessName, shmID_string, DP1_p, DP2_p, (char *)NULL);
-} */
-
+ * FUNCTION     :   spawnDC() 
+ * DESCRIPTION  :   This function is used to spawn the DC process,
+ *                  passing it the shared memory ID, and the PID of 
+ *                  DP1 and DP2
+ * PARAMETERS   :   int     -   shmID: the shared memory ID
+ *                  pid_t   -   DP1_pid: the PID of DP1
+ * RETURNS      :   void
+*/
 void spawnDC(int shmID, pid_t DP1_pid) {
     // Char buffers for passing when spawning DC
     char shmID_string[kshmIDBufferSize];
@@ -60,6 +64,18 @@ char getRandomLetter() {
 }
 
 
+
+/*
+ * FUNCTION     :   writeLetterToBuffer() 
+ * DESCRIPTION  :   This function is used to write a single random letter 
+ *                  from 'a' to 't' to the circular buffer, shared with 
+ *                  data producer 1 (DP1) and data consumer (DC). Utilises
+ *                  a semaphore to marshal shared memory access              
+ * PARAMETERS   :   SharedMemory*   -   pSharedMemory: pointer to shared memory
+ *                  int             -   semaphoreID: the ID of the semaphore
+ * RETURNS      :   int -   1: EXIT_FAILURE
+ *                      -   0: kSuccess (successful write and sleep)
+*/
 int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID) {
     // First lets lock the semaphore
    // Lock the semaphore for atomic access
@@ -97,6 +113,16 @@ int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID) {
 }
 
 
+
+/*
+ * FUNCTION     :   getSemaphoreInfo() 
+ * DESCRIPTION  :   This function is used to acquire the semaphore key
+ *                  and then the semaphore ID
+ * PARAMETERS   :   int*    -   semaphoreID: pointer to global semaphoreID
+ *                  key_t*  -   semaphoreKey: pointer to global semaphoreKey
+ * RETURNS      :   int -   -1: kError - error arose
+ *                      -   0: kSuccess
+*/
 int getSemaphoreInfo(int* semaphoreID, key_t* semaphoreKey) {
     // Generate the semaphore key using ftok
     *semaphoreKey = ftok(kPathCommonBin, kSemaphoreID); // ../../common/bin

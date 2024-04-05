@@ -81,7 +81,6 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
 
 
 
-
 /*
 * FUNCTION    : attachSemaphore()
 * DESCRIPTION : This function takes a pointer to the semaphore ID and attached to a the semaphore if possible

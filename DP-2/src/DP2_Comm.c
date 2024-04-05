@@ -62,37 +62,33 @@ char getRandomLetter() {
 
 int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID) {
     // First lets lock the semaphore
+   // Lock the semaphore for atomic access
     if (semop(semaphoreID, &getSem, 1) == kError) {
         perror("semop lock error - DP2");
         exit(EXIT_FAILURE);
     }
 
-    // Check our index positions
-    int nextBufferPosition = (pSharedMemory->writeIndex + 1) % kBufferSize; // Circular!
-    // Ensure the next writing position isn't where the read index is
-    if (nextBufferPosition == pSharedMemory->readIndex) {
-        printf("DP2 doesn't want to overtake readIndex\n");
+    // Calculate the next position to write to, ensuring circular buffer 
+    int nextBufferPosition = (pSharedMemory->writeIndex + 1) % kBufferSize;
 
-        // Release semaphore
-        // Unlock semaphore
-    if (semop(semaphoreID, &releaseSem, 1) == kError) {
-        perror("semop unlock error - DP2 (readIndex)");
-        exit(EXIT_FAILURE);
-    }
-        return kDontWrite;
-    } else {
-        // We can write b/c position is before or after reading index
-        // Get the letter
+    if (nextBufferPosition != pSharedMemory->readIndex) {
+  
+        // Generate a random letter and write it to the buffer
         char letter = getRandomLetter();
-        // Write to the current index position then update to next 
         pSharedMemory->buffer[pSharedMemory->writeIndex] = letter;
-        
-        // Update index position
+        printf("DP2 writes '%c' at position %d\n", letter, pSharedMemory->writeIndex);
+
+        // Update the write index to the next position
         pSharedMemory->writeIndex = nextBufferPosition;
+
+        // Sleep for 1/20th of a second to fulfill the requirement on the documentation
+        usleep(kOneTwentieth); // 50,000 microseconds = 1/20th of a second
+    } else {
+        printf("DP2 doesn't want to overtake readIndex\n");
     }
 
-    // Unlock semaphore
-    if (semop(semaphoreID, &releaseSem, 1) == kError) {
+    // Release the semaphore
+    if (semop(semaphoreID, &releaseSem, 1) == -1) {
         perror("semop unlock error - DP2");
         exit(EXIT_FAILURE);
     }

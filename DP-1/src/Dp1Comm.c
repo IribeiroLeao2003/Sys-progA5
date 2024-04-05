@@ -23,14 +23,13 @@ char getRandomLetter() {
 */
 int writeToBuffer(SharedMemory* shmPtr, int semId) {
     //Define variables
-    int lettWritten = 0;
     int spaceAval;
     int maxLetters = kLettersAtoT; 
 
 
   
 
-    while (lettWritten < maxLetters) {
+    while (true) {
         // Get semaphore for atomic access
         if (useSemaphore(semId) == kError) {
             fprintf(stderr, "useSemaphore failed: %s\n", strerror(errno));
@@ -49,7 +48,7 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
 
         if (spaceAval <= 0) {
             //if there is no more space simply release the semaphore
-            printf ("Releasing Semaphore  DP-1\n");
+            printf ("Not Enought Space !, Releasing Semaphore  DP-1\n");
             releaseSemaphore(semId);
 
             //sleep for one milesecond
@@ -67,28 +66,35 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
         for (int i = 0; i < maxLetters; i++) {
             int nextIndex = shmPtr->writeIndex;
             shmPtr->buffer[shmPtr->writeIndex] = getRandomLetter();
-            incrementIndex(&(shmPtr->writeIndex));
+            printf("DP2 writes '%c' at position %d\n", shmPtr->buffer[shmPtr->writeIndex] , shmPtr->writeIndex);
 
-            //check if we reached the read intex
+            incrementIndex(&(shmPtr->writeIndex));
+                //check if we reached the read intex
             if (nextIndex == shmPtr->readIndex) {
                 printf ("Read Index Reached ! DP-1\n");
                 break; 
             }
+     
         }
-         printf ("Ammount of letters written %d/Releasing semaphore DP-1\n", lettWritten);
+
+        
+         printf ("Releasing semaphore DP-1\n");
         //After finishing writting, release semaphore using semID
         if (releaseSemaphore(semId) == kError) {
             perror("releaseSemaphore");
             return kError;
         }
+                // After releasing the semaphore (indicating end of critical section)
+        int usedSpace = (shmPtr->writeIndex >= shmPtr->readIndex) ?
+                        (shmPtr->writeIndex - shmPtr->readIndex) :
+                        (kBufferSize - shmPtr->readIndex + shmPtr->writeIndex);
+        printf("Buffer usage: %d/%d\n", usedSpace, kBufferSize);
 
-        lettWritten += maxLetters;
      
 
-        //check if limit was reached, if yes sleep for 2 seconds
-        if (lettWritten == kLettersAtoT) {
-            sleep(kSecondsToSleep);
-        }
+
+        sleep(kSecondsToSleep);
+    
     }
     return kSuccess;
 }

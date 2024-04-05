@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
         }
         
         // Sleep for 1/20th second (50,000 microseconds)
-        usleep(kOneTwentieth);
+        // usleep(kOneTwentieth);
     }
 
     printf("DP2 wrote %d times\n", writeCounter);
@@ -115,5 +115,8 @@ void sigintHandler(int sig) {
             perror("shmdt error - DP2");
         }
         pSharedMemory = NULL;
+    }
+    if (semctl(semaphoreID, 0, IPC_RMID) == -1) {
+        perror("Failed to destroy semaphore in signal handler");
     }
 }

@@ -71,7 +71,7 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
 
     if (semctl(*semaphoreID, 0, SETALL, init_values) == kError) 
 	{
-        printf ("Semaphore Cant be initilized\n");
+        perror ("Semaphore Cant be initilized\n");
         return kError;
 	}
 
@@ -95,7 +95,7 @@ int attachSemaphore(int* semaphoreID) {
         return kError;
     }
 
-    printf("Key: %d\n", semaphoreKey);
+    //printf("Key: %d\n", semaphoreKey);
 
     // Get the ID
     *semaphoreID = semget(semaphoreKey, kSingleUseSemaphore, kZeroFlag);
@@ -103,7 +103,7 @@ int attachSemaphore(int* semaphoreID) {
         perror("semget error - DP2");
         return kError;
     }
-    printf("ID: %d\n", *semaphoreID);
+    //printf("ID: %d\n", *semaphoreID);
 
     return kSuccess;
 }

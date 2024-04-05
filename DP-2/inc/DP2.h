@@ -13,6 +13,5 @@
 // void spawnDC(int* shmID, pid_t DP1_pid, pid_t DP2_pid);
 void sigintHandler(int sig);
 void spawnDC(int shmID, pid_t DP1_pid);
-char getRandomLetter();
 int getSemaphoreInfo(int* semaphoreID, key_t* semaphoreKey);
 int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID);

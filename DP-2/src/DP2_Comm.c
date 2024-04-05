@@ -53,17 +53,6 @@ void spawnDC(int shmID, pid_t DP1_pid) {
 }
 
 
-/*
-* FUNCTION    : getRandomLetter()
-* DESCRIPTION : Function that returns a random letter from a to t
-* PARAMETERS  : None
-* RETURNS     : A random char
-*/
-char getRandomLetter() {
-    return 'a' + rand() % ('t' - 'a' + 1);
-}
-
-
 
 /*
  * FUNCTION     :   writeLetterToBuffer() 

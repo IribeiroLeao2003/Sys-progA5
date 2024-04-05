@@ -7,6 +7,6 @@
 #define kPathtoDP2          "../../DP-2/bin/DP2"
 #define kPathtoDC           "../../DC/bin/DC"
 
-char getRandomLetter();
+
 int writeToBuffer(SharedMemory* shmPtr, int semId);
 void launchChildDP2(int smID);

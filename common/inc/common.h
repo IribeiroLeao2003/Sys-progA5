@@ -64,6 +64,8 @@ int useSemaphore(int semId);
 int releaseSemaphore(int semId);
 void incrementIndex(int* index);
 
+char getRandomLetter();
+
 
 
 #endif

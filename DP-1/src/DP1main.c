@@ -21,18 +21,11 @@ int main()
 
     signal (SIGINT, shutDownHandler);
 
-    if (createSemaphore(&semaphoreID, &semaphoreKey) != kError)
+    if (createSemaphore(&semaphoreID, &semaphoreKey) == kError)
     {
-        printf("Semaphore Created with unique ID of  %d\n", semaphoreID);
-
-    }
-    else {
-
         //Destroy semaphore if creation failed 
-        printf("Semaphore create failed\n");
-
         if (semctl(semaphoreID, 0, IPC_RMID) == kError) {
-            perror("Failed to destroy semaphore in signal handler");
+            perror("Failed to destroy semaphore in signal handler - DP1");
         }
         return kError;
     }
@@ -42,7 +35,7 @@ int main()
     smuniquekey = ftok(".", 'R');
     if (smuniquekey == kError)
     {
-        perror("ftok");
+        perror("ftok - DP1");
         return kError;
     }
 
@@ -51,18 +44,16 @@ int main()
     // start shared memory
     if (initSharedMem(&smID, &smuniquekey) == kSuccess)
     {
-        printf("Shared memory started succefully with key of %d\n", smuniquekey);
         pSharedMem = (SharedMemory *)shmat(smID, NULL, kZeroFlag); // attach to memory if valid
     }
     else
     {
-        printf("Error in starting shared memory\n");
         return kError;
     }
 
-      // getting semaphore ID ready
+      
 
-    printf("Sending %d DP1\n", smID);
+   
 
     launchChildDP2(smID);
 
@@ -70,7 +61,6 @@ int main()
 
     statusBuffer = writeToBuffer(pSharedMem, semaphoreID); 
     if(statusBuffer == kError){ 
-        printf("Error as its writting to buffer  DP-1\n");
         return kError;
     }
 
@@ -91,5 +81,8 @@ int main()
 void shutDownHandler()
 {
     signal(SIGINT, shutDownHandler); // setup the sigint hanlder
+    if (smID != kError) {
+        shmctl(smID, IPC_RMID, NULL);
+    }
     exit(0);
 }

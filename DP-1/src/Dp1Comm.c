@@ -27,9 +27,6 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
             fprintf(stderr, "useSemaphore failed: %s\n", strerror(errno));
             return kError;
         }
-        else { 
-            printf ("Entering critical region  DP-1\n");
-        }
 
         // Calculate space available to write and change lettersToWrite if necessary
         if (shmPtr->writeIndex >= shmPtr->readIndex) {
@@ -40,7 +37,6 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
 
         if (spaceAval <= 0) {
             //if there is no more space simply release the semaphore
-            printf ("Not Enought Space !, Releasing Semaphore  DP-1\n");
             releaseSemaphore(semId);
 
             //sleep for one milesecond
@@ -58,19 +54,16 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
         for (int i = 0; i < maxLetters; i++) {
             int nextIndex = shmPtr->writeIndex;
             shmPtr->buffer[shmPtr->writeIndex] = getRandomLetter();
-            printf("DP1 writes '%c' at position %d\n", shmPtr->buffer[shmPtr->writeIndex] , shmPtr->writeIndex);
 
             incrementIndex(&(shmPtr->writeIndex));
                 //check if we reached the read intex
             if (nextIndex == shmPtr->readIndex) {
-                printf ("Read Index Reached ! DP-1\n");
                 break; 
             }
      
         }
 
         
-         printf ("Releasing semaphore DP-1\n");
         //After finishing writting, release semaphore using semID
         if (releaseSemaphore(semId) == kError) {
             perror("releaseSemaphore");
@@ -99,17 +92,13 @@ void launchChildDP2(int smID) {
         break;
 
     case 0 : 
-        printf("Im the child, and my PID is %d - DP1\n", pid);
         sprintf(args, "%d", smID);
-        printf("Sending %s DP1\n", args);
         execl(kPathtoDP2, "DP-2",  args, NULL);
         perror("execl");
         exit(EXIT_FAILURE);
         break;
     
     default:
-        printf("Im the parent, and my PID is %d\n", pid);
-        // if its more than 0 means its a parent process
         break;
     }
 

@@ -58,7 +58,7 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
         for (int i = 0; i < maxLetters; i++) {
             int nextIndex = shmPtr->writeIndex;
             shmPtr->buffer[shmPtr->writeIndex] = getRandomLetter();
-            printf("DP2 writes '%c' at position %d\n", shmPtr->buffer[shmPtr->writeIndex] , shmPtr->writeIndex);
+            printf("DP1 writes '%c' at position %d\n", shmPtr->buffer[shmPtr->writeIndex] , shmPtr->writeIndex);
 
             incrementIndex(&(shmPtr->writeIndex));
                 //check if we reached the read intex

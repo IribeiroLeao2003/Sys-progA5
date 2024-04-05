@@ -96,8 +96,8 @@ void printData()
     char symbols[kSymbolsLength] = {"\0"};
     for(int i = 0; i <= kLettersAtoT; i++)
     {
-        createSymbols(symbols, letterCounts[i]);
-        printf("%C-%d %s\n", i+kOffset, letterCounts[i], symbols);
+        //createSymbols(symbols, letterCounts[i]);
+        printf("%C-%03d %s\n", i+kOffset, letterCounts[i], symbols);
     }
 }
 
@@ -154,7 +154,7 @@ void shutDownHandler(int SignalNumber)
 
     releaseSemaphore(semId); //release semaphore for use
     if (semctl(semId, 0, IPC_RMID) == kError) {
-        perror("Failed to destroy semaphore in signal handler");
+        perror("Failed to destroy semaphore in shutDownHandler");
     }
 
     signal (SIGINT, shutDownHandler); //setup the sigint hanlder

@@ -80,39 +80,12 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
 }
 
 
-
 /*
 * FUNCTION    : attachSemaphore()
 * DESCRIPTION : This function takes a pointer to the semaphore ID and attached to a the semaphore if possible
 * PARAMETERS  : int* semaphoreID: A pointer to the semaphore ID so it can be modifed
 * RETURNS     : The error status of the proccess
-
-int attachSemaphore(int* semaphoreID)
-{
-    int errorStatus = kSuccess;
-    key_t semKey = 0;
-    //generate key
-    semKey = ftok("../../common/bin", kSemaphoreID); //common/bin directory
-
-    //check if semaphore exists
-    if (semKey != kError)
-    {
-        *semaphoreID = semget(semKey, kSingleUseSemaphore, kCheckExists);
-        if (*semaphoreID == kError) //check if it failed
-        {
-            perror("shmget");
-            errorStatus = kError;
-        }
-    }
-    else
-    {
-        errorStatus = kError;
-    }
-
-    return errorStatus;
-}
 */
-
 int attachSemaphore(int* semaphoreID) {
     // Generate the semaphore key using ftok
     key_t semaphoreKey;
@@ -196,5 +169,5 @@ void incrementIndex(int* index)
 * RETURNS     : A random char
 */
 char getRandomLetter() {
-    return 'a' + rand() % ('t' - 'a' + 1);
+    return 'A' + rand() % ('T' - 'A' + 1);
 }

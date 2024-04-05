@@ -91,12 +91,5 @@ int main()
 void shutDownHandler()
 {
     signal(SIGINT, shutDownHandler); // setup the sigint hanlder
-    if (smID != kError) {
-        shmctl(smID, IPC_RMID, NULL);
-    }
-    if (semctl(semaphoreID, 0, IPC_RMID) == -1) {
-        perror("Failed to destroy semaphore in signal handler");
-    }
     exit(0);
-
 }

@@ -2,9 +2,8 @@
 
 // Global Variables
 int smID;
-key_t smuniquekey;
-int statusBuffer;
-    int semaphoreID = 0;
+
+
 void shutDownHandler();
 
 
@@ -12,11 +11,11 @@ void shutDownHandler();
 int main()
 {
 
-    // create a string buffer for shared memory id to send to dp2
-    char shmIDStr[kSharedMIDBuffer];
-    char pIdStr[kSharedMIDBuffer];
-    int errorCode;
-
+    // variables
+    key_t smuniquekey;
+    int statusBuffer;
+    int semaphoreID = 0;
+    SharedMemory *pSharedMem = NULL;
     key_t semaphoreKey;
 
     signal (SIGINT, shutDownHandler);
@@ -39,8 +38,6 @@ int main()
         return kError;
     }
 
-    SharedMemory *pSharedMem = NULL;
-
     // start shared memory
     if (initSharedMem(&smID, &smuniquekey) == kSuccess)
     {
@@ -51,14 +48,10 @@ int main()
         return kError;
     }
 
-      
-
-   
-
+    //launch child process and execute DP2
     launchChildDP2(smID);
-
-   
-
+    
+    //start writting to buffer
     statusBuffer = writeToBuffer(pSharedMem, semaphoreID); 
     if(statusBuffer == kError){ 
         return kError;
@@ -75,7 +68,7 @@ int main()
 /*
  * FUNCTION    : shutDownHandler()
  * DESCRIPTION : Custom handler for the SIGINT call that detaches DP-1 from memory
- * PARAMETERS  : int signalNumber: the int signal
+ * PARAMETERS  : 
  * RETURNS     : void
  */
 void shutDownHandler()

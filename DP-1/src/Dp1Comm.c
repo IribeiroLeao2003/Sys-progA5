@@ -79,8 +79,18 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
 }
 
 
+
+
+
+
+/*
+* FUNCTION    : launchChildDP2
+* DESCRIPTION : Function that creates child proccess and sets it to be DP-2
+* PARAMETERS  : int smID: The Shared Memory ID that will be sent to DP-2
+* RETURNS     : Nothing
+*/
 void launchChildDP2(int smID) {
-    char args[30];
+    char args[kArgsSize];
     //get pid
     pid_t pid = fork();
 
@@ -91,7 +101,7 @@ void launchChildDP2(int smID) {
         exit(EXIT_FAILURE);
         break;
 
-    case 0 : 
+    case kChildProccess: 
         sprintf(args, "%d", smID);
         execl(kPathtoDP2, "DP-2",  args, NULL);
         perror("execl");

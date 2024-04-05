@@ -76,12 +76,6 @@ int writeToBuffer(SharedMemory* shmPtr, int semId) {
             perror("releaseSemaphore");
             return kError;
         }
-                // After releasing the semaphore (indicating end of critical section)
-        int usedSpace = (shmPtr->writeIndex >= shmPtr->readIndex) ?
-                        (shmPtr->writeIndex - shmPtr->readIndex) :
-                        (kBufferSize - shmPtr->readIndex + shmPtr->writeIndex);
-        printf("Buffer usage: %d/%d\n", usedSpace, kBufferSize);
-
      
 
 

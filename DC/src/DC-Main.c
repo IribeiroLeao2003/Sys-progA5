@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
         DP2PID = atoi(argv[kDP2ProcIDLoc]);   
         
         //Ready to attach
-        errorStatus = attachToResources(pSharedMem, sharedMemId, &semId);
+        errorStatus = attachToResources(&pSharedMem, sharedMemId, &semId);
         printf("shared mem id: %d\nsemID: %d\n", sharedMemId, semId);
 
         if (errorStatus != kError)
@@ -72,8 +72,7 @@ void processLoop(SharedMemory* pSharedMem, int semId)
         time_t endTime = time(NULL);
         sleep(kSleepTime);
         sleepCount += 2;
-        //alarm(1);
-        wakeupHandler(1);
+        alarm(1);
         if (sleepCount >= kTenSeconds) //has it been 10 seconds?
         {
             printf("Inside PrintData\n");
@@ -93,12 +92,12 @@ void processLoop(SharedMemory* pSharedMem, int semId)
 */
 void printData()
 {
-    system("clear");//clear terminal
+    //system("clear");//clear terminal
     char symbols[kSymbolsLength] = {"\0"};
     for(int i = 0; i <= kLettersAtoT; i++)
     {
         createSymbols(symbols, letterCounts[i]);
-        printf("%C-%03d %s\n", i+kOffset, letterCounts[i], symbols);
+        printf("%C-%d %s\n", i+kOffset, letterCounts[i], symbols);
     }
 }
 
@@ -139,6 +138,7 @@ void createSymbols(char symbols[], int letterCount)
 */
 void shutDownHandler(int SignalNumber)
 {
+    useSemaphore(semId); //need to wait for access to semaphore
     //ensure PIDs are valid, kill and make as done
     if (DP1PID != 0)
     {
@@ -152,7 +152,8 @@ void shutDownHandler(int SignalNumber)
     }
     shutdown = true;
 
-        if (semctl(semId, 0, IPC_RMID) == kError) {
+    releaseSemaphore(semId); //release semaphore for use
+    if (semctl(semId, 0, IPC_RMID) == kError) {
         perror("Failed to destroy semaphore in signal handler");
     }
 
@@ -173,11 +174,12 @@ void wakeupHandler(int signalNumber)
     printf("Finished useSemaphore!\n");
     for (int i = 0; i <= kReadCount; i++)
     {
+        printf("In loop index: %d\n", pSharedMem->readIndex);
         char copy = pSharedMem->buffer[pSharedMem->readIndex];
-            
         //65 (A) - offset (65) = 0 which is the A index
         int letterCountIndex = (int) copy - kOffset;
         letterCounts[letterCountIndex]++; //increment index
+        printf("lettercount: index: %c count: %d\n", letterCountIndex + kOffset, letterCounts[letterCountIndex]);
 
         incrementIndex(&pSharedMem->readIndex); //increment
     }

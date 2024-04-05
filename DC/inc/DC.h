@@ -22,7 +22,7 @@
 
 //function prototypes
 void shutDownHandler(int SignalNumber);
-int attachToResources(SharedMemory* pSharedMem, int sharedMemId, int* semId);
+int attachToResources(SharedMemory** pSharedMem, int sharedMemId, int* semId);
 void processLoop(SharedMemory* pSharedMem, int semId);
 int closeSharedMem(int sharedMemID);
 int closeSemaphore(int semaphoreId);

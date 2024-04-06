@@ -14,8 +14,8 @@
 #define kDP1ProcIDLoc      2
 #define kDP2ProcIDLoc      3
 #define kArgsCount         4
-#define kReadCount         20
-#define kSymbolsLength     11
+#define kReadCount         30
+#define kSymbolsLength     51
 
 #define kSleepTime         2
 #define kTenSeconds        10

@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
 
         if (errorStatus != kError)
         {
+            printData();
             processLoop(pSharedMem, semId);
         }
 
@@ -91,9 +92,9 @@ void processLoop(SharedMemory* pSharedMem, int semId)
 */
 void printData()
 {
-    //system("clear");//clear terminal
+    system("clear");//clear terminal
     char symbols[kSymbolsLength] = {"\0"};
-    for(int i = 0; i <= kLettersAtoT; i++)
+    for(int i = 0; i < kLettersAtoT; i++)
     {
         createSymbols(symbols, letterCounts[i]);
         printf("%C-%03d %s\n", i+kOffset, letterCounts[i], symbols);
@@ -174,16 +175,27 @@ void wakeupHandler(int signalNumber)
     //printf("Wakeup Handler!\n");
     useSemaphore(semId); //need to wait for access to semaphore
     //printf("Finished useSemaphore!\n");
+
     for (int i = 0; i <= kReadCount; i++)
     {
-        //printf("In loop index: %d\n", pSharedMem->readIndex);
-        char copy = pSharedMem->buffer[pSharedMem->readIndex];
-        //65 (A) - offset (65) = 0 which is the A index
-        int letterCountIndex = (int) copy - kOffset;
-        letterCounts[letterCountIndex]++; //increment index
-        //printf("lettercount: index: %c count: %d\n", letterCountIndex + kOffset, letterCounts[letterCountIndex]);
-
-        incrementIndex(&pSharedMem->readIndex); //increment
+        int nextBufferPosition = (pSharedMem->readIndex + 1) % kBufferSize;
+        if (nextBufferPosition != pSharedMem->writeIndex)
+        {
+            //printf("Next buffer pos: %d\n", nextBufferPosition);
+            //printf("In loop index: %d\n", pSharedMem->readIndex);
+            char copy = pSharedMem->buffer[pSharedMem->readIndex];
+            //65 (A) - offset (65) = 0 which is the A index
+            int letterCountIndex = (int) copy - kOffset;
+            letterCounts[letterCountIndex]++; //increment index
+            //printf("lettercount: index: %c count: %d\n", letterCountIndex + kOffset, letterCounts[letterCountIndex]);
+            incrementIndex(&pSharedMem->readIndex); //increment
+        }
+        else
+        {
+            //printf("Don't wanna overtake\n");
+            break;
+        }
+    
     }
     //printf("Finished copy!\n");
 

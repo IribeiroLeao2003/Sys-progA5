@@ -23,12 +23,3 @@ cd ..
 cd DP-2
 make clean
 make
-cd ..
-cd DP-1
-cd bin
-
-
-#copy the DR and DX to common
-#cd common/bin
-#cp ../../DR/bin/dr dr
-#cp ../../DX/bin/dx dx

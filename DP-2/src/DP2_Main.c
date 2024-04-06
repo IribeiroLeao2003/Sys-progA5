@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
     else{ 
-        printf("Shared memory attached succesfully!\n");
+        // printf("Shared memory attached succesfully!\n");
     }
 
     // Get the semaphore information
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
         // usleep(kOneTwentieth);
     }
 
-    printf("DP2 wrote %d times\n", writeCounter);
+    // printf("DP2 wrote %d times\n", writeCounter);
     return kSuccess;
 }
 

@@ -89,7 +89,7 @@ int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID) {
         // Sleep for 1/20th of a second to fulfill the requirement on the documentation
         usleep(kOneTwentieth); // 50,000 microseconds = 1/20th of a second
     } else {
-        printf("DP2 doesn't want to overtake readIndex\n");
+        // printf("DP2 doesn't want to overtake readIndex\n");
         usleep(kOneTwentieth);
         return kDontWrite;
     }
@@ -122,14 +122,14 @@ int getSemaphoreInfo(int* semaphoreID, key_t* semaphoreKey) {
         return kError;
     }
 
-    printf("DP2 semKey is : %d\n", *semaphoreKey);
+    // printf("DP2 semKey is : %d\n", *semaphoreKey);
     // Get the ID
     *semaphoreID = semget(*semaphoreKey, kSingleUseSemaphore, kZeroFlag);
     if (*semaphoreID == kError) {
         perror("semget error - DP2");
         return kError;
     }
-    printf("DP2 semID is : %d\n", *semaphoreID);
+    // printf("DP2 semID is : %d\n", *semaphoreID);
 
     return kSuccess;
 }

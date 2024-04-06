@@ -19,8 +19,8 @@ int letterCounts[kLettersAtoT] = {0};
 
 int main(int argc, char* argv[])
 {
-    printf("Arg count: %d\n", argc);
-    printf("%s\n%s\n%s\n%s\n", argv[0], argv[1], argv[2], argv[3]);
+    //printf("Arg count: %d\n", argc);
+    //printf("%s\n%s\n%s\n%s\n", argv[0], argv[1], argv[2], argv[3]);
     int errorStatus = kSuccess;
     if (argc == kArgsCount)
     {
@@ -33,15 +33,15 @@ int main(int argc, char* argv[])
         DP2PID = atoi(argv[kDP2ProcIDLoc]);   
         
         //Ready to attach
-        errorStatus = attachToResources(pSharedMem, sharedMemId, &semId);
-        printf("shared mem id: %d\nsemID: %d\n", sharedMemId, semId);
+        errorStatus = attachToResources(&pSharedMem, sharedMemId, &semId);
+        //printf("shared mem id: %d\nsemID: %d\n", sharedMemId, semId);
 
         if (errorStatus != kError)
         {
             processLoop(pSharedMem, semId);
         }
 
-        printf("Closing shared mem and sem\n");
+        //printf("Closing shared mem and sem\n");
         //Done process loop so shutdown
         closeSharedMem(sharedMemId);
     }
@@ -57,26 +57,24 @@ int main(int argc, char* argv[])
 /*
 * FUNCTION    : processLoop()
 * DESCRIPTION : The main loop for processing the DC
-* PARAMETERS  : int sharedMemID: the id of the shared memory to use
-*             : pid_t DP1PID: the pid of DP1
-*             : pid_t DP2PID: the pid of DP2
-* RETURNS     : The error status of the proccess
+* PARAMETERS  : SharedMemory* pSharedMem: the shared memory address
+*             : int semID: the semaphore ID
+* RETURNS     : void
 */
 void processLoop(SharedMemory* pSharedMem, int semId)
 {
-    printf("In proccess loop\n");
+    //printf("In proccess loop\n");
     int sleepCount = 0;
     while(shutdown == false) //until shutdown
     {
-        printf("Sleeping for 2 seconds\n");
+        //printf("Sleeping for 2 seconds\n");
         time_t endTime = time(NULL);
         sleep(kSleepTime);
-        sleepCount += 2;
-        //alarm(1);
-        wakeupHandler(1);
+        sleepCount += kSleepTime;
+        alarm(kAlarmVal);
         if (sleepCount >= kTenSeconds) //has it been 10 seconds?
         {
-            printf("Inside PrintData\n");
+            //printf("Inside PrintData\n");
             printData();
             sleepCount = 0;
         }
@@ -87,13 +85,13 @@ void processLoop(SharedMemory* pSharedMem, int semId)
 
 /*
 * FUNCTION    : printData()
-* DESCRIPTION : Prints all the data about the letter counts
+* DESCRIPTION : Prints all the data about the letter counts with symbols
 * PARAMETERS  : void
 * RETURNS     : void
 */
 void printData()
 {
-    system("clear");//clear terminal
+    //system("clear");//clear terminal
     char symbols[kSymbolsLength] = {"\0"};
     for(int i = 0; i <= kLettersAtoT; i++)
     {
@@ -115,17 +113,20 @@ void createSymbols(char symbols[], int letterCount)
     strcpy(symbols, ""); //clear string
     while (letterCount > 0)
     {
-        if (letterCount >= 100)
+        if (letterCount >= kStarCount)
         {
             strcat(symbols, "*");
+            letterCount -= kStarCount;
         }
-        else if (letterCount >= 10)
+        else if (letterCount >= kPlusCount)
         {
             strcat(symbols, "+");
+            letterCount -= kPlusCount;
         }
-        else if(letterCount >= 1)
+        else if(letterCount >= kDashCount)
         {
             strcat(symbols, "-");
+            letterCount -= kDashCount;
         }
     }
 }
@@ -139,6 +140,7 @@ void createSymbols(char symbols[], int letterCount)
 */
 void shutDownHandler(int SignalNumber)
 {
+    useSemaphore(semId); //need to wait for access to semaphore
     //ensure PIDs are valid, kill and make as done
     if (DP1PID != 0)
     {
@@ -152,8 +154,9 @@ void shutDownHandler(int SignalNumber)
     }
     shutdown = true;
 
-        if (semctl(semId, 0, IPC_RMID) == kError) {
-        perror("Failed to destroy semaphore in signal handler");
+    releaseSemaphore(semId); //release semaphore for use
+    if (semctl(semId, 0, IPC_RMID) == kError) {
+        perror("Failed to destroy semaphore in shutDownHandler");
     }
 
     signal (SIGINT, shutDownHandler); //setup the sigint hanlder
@@ -168,23 +171,24 @@ void shutDownHandler(int SignalNumber)
 */
 void wakeupHandler(int signalNumber)
 {
-    printf("Wakeup Handler!\n");
+    //printf("Wakeup Handler!\n");
     useSemaphore(semId); //need to wait for access to semaphore
-    printf("Finished useSemaphore!\n");
+    //printf("Finished useSemaphore!\n");
     for (int i = 0; i <= kReadCount; i++)
     {
+        //printf("In loop index: %d\n", pSharedMem->readIndex);
         char copy = pSharedMem->buffer[pSharedMem->readIndex];
-            
         //65 (A) - offset (65) = 0 which is the A index
         int letterCountIndex = (int) copy - kOffset;
         letterCounts[letterCountIndex]++; //increment index
+        //printf("lettercount: index: %c count: %d\n", letterCountIndex + kOffset, letterCounts[letterCountIndex]);
 
         incrementIndex(&pSharedMem->readIndex); //increment
     }
-    printf("Finished copy!\n");
+    //printf("Finished copy!\n");
 
     releaseSemaphore(semId); //release semaphore for use
-    printf("Finished release!\n");
+    //printf("Finished release!\n");
 
     signal (SIGALRM, wakeupHandler); //setup the sigint hanlder
 }

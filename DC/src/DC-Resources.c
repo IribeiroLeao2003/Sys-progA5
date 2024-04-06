@@ -16,28 +16,21 @@
 *             : int* semId: pointer to store the id of the semaphore
 * RETURNS     : The error status of the proccess
 */
-int attachToResources(SharedMemory* pSharedMem, int sharedMemId, int* pSemId)
+int attachToResources(SharedMemory** pSharedMem, int sharedMemId, int* pSemId)
 {
     int errorStatus = kSuccess;
-    while (pSharedMem == NULL) //try to attack to shared Memory
+    while (*pSharedMem == NULL) //try to attack to shared Memory
     {
-        pSharedMem = (SharedMemory*) shmat(sharedMemId, NULL, kZeroFlag); //attach to memory if valid
+        *pSharedMem = (SharedMemory*) shmat(sharedMemId, NULL, kZeroFlag); //attach to memory if valid
         if (pSharedMem == NULL)
         {
             sleep(kSleepTime);
         }
     }
 
-    /*
-    // initilize semaphore, this doesn't do anything from what I saw
-    if (semctl(*pSemId, 0, SETVAL, 1) == kError) {
-        errorStatus = kError;
-        perror(strerror(errno));
-    } */
-
     //Get semaphore
     attachSemaphore(pSemId);
-    printf("Attached to semaphore in DC - <%d>\n", *pSemId);
+    //printf("Attached to semaphore in DC - <%d>\n", *pSemId);
     if (*pSemId == kError)
     {
         errorStatus = kError;

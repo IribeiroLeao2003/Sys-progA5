@@ -71,7 +71,7 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
 
     if (semctl(*semaphoreID, 0, SETALL, init_values) == kError) 
 	{
-        printf ("Semaphore Cant be initilized\n");
+        perror ("Semaphore Cant be initilized\n");
         return kError;
 	}
 
@@ -80,39 +80,12 @@ int createSemaphore(int* semaphoreID, key_t *semaphoreKey)
 }
 
 
-
 /*
 * FUNCTION    : attachSemaphore()
 * DESCRIPTION : This function takes a pointer to the semaphore ID and attached to a the semaphore if possible
 * PARAMETERS  : int* semaphoreID: A pointer to the semaphore ID so it can be modifed
 * RETURNS     : The error status of the proccess
-
-int attachSemaphore(int* semaphoreID)
-{
-    int errorStatus = kSuccess;
-    key_t semKey = 0;
-    //generate key
-    semKey = ftok("../../common/bin", kSemaphoreID); //common/bin directory
-
-    //check if semaphore exists
-    if (semKey != kError)
-    {
-        *semaphoreID = semget(semKey, kSingleUseSemaphore, kCheckExists);
-        if (*semaphoreID == kError) //check if it failed
-        {
-            perror("shmget");
-            errorStatus = kError;
-        }
-    }
-    else
-    {
-        errorStatus = kError;
-    }
-
-    return errorStatus;
-}
 */
-
 int attachSemaphore(int* semaphoreID) {
     // Generate the semaphore key using ftok
     key_t semaphoreKey;
@@ -122,7 +95,7 @@ int attachSemaphore(int* semaphoreID) {
         return kError;
     }
 
-    printf("Key: %d\n", semaphoreKey);
+    //printf("Key: %d\n", semaphoreKey);
 
     // Get the ID
     *semaphoreID = semget(semaphoreKey, kSingleUseSemaphore, kZeroFlag);
@@ -130,7 +103,7 @@ int attachSemaphore(int* semaphoreID) {
         perror("semget error - DP2");
         return kError;
     }
-    printf("ID: %d\n", *semaphoreID);
+    //printf("ID: %d\n", *semaphoreID);
 
     return kSuccess;
 }
@@ -196,5 +169,5 @@ void incrementIndex(int* index)
 * RETURNS     : A random char
 */
 char getRandomLetter() {
-    return 'a' + rand() % ('t' - 'a' + 1);
+    return 'A' + rand() % ('T' - 'A' + 1);
 }

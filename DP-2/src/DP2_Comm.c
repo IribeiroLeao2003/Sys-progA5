@@ -81,7 +81,7 @@ int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID) {
         // Generate a random letter and write it to the buffer
         char letter = getRandomLetter();
         pSharedMemory->buffer[pSharedMemory->writeIndex] = letter;
-        printf("DP2 writes '%c' at position %d\n", letter, pSharedMemory->writeIndex);
+        //printf("DP2 writes '%c' at position %d\n", letter, pSharedMemory->writeIndex);
 
         // Update the write index to the next position
         pSharedMemory->writeIndex = nextBufferPosition;

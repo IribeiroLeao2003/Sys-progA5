@@ -114,7 +114,4 @@ void sigintHandler(int sig) {
         }
         pSharedMemory = NULL;
     }
-    if (semctl(semaphoreID, 0, IPC_RMID) == -1) {
-        perror("Failed to destroy semaphore in signal handler");
-    }
 }

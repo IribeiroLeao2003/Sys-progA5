@@ -20,9 +20,14 @@
 #define kSleepTime         2
 #define kTenSeconds        10
 
+#define kStarCount         100
+#define kPlusCount         10
+#define kDashCount         1
+#define kAlarmVal          1
+
 //function prototypes
 void shutDownHandler(int SignalNumber);
-int attachToResources(SharedMemory* pSharedMem, int sharedMemId, int* semId);
+int attachToResources(SharedMemory** pSharedMem, int sharedMemId, int* semId);
 void processLoop(SharedMemory* pSharedMem, int semId);
 int closeSharedMem(int sharedMemID);
 int closeSemaphore(int semaphoreId);

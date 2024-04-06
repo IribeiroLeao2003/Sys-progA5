@@ -7,6 +7,7 @@
 #define kshmIDBufferSize    10
 #define kPIDSize            10
 #define kDontWrite          -2
+#define kTriggerLongSleep   30
 #define kOneTwentieth       50000
 
 

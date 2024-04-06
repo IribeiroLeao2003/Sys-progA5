@@ -1,11 +1,5 @@
 #include "../inc/DP-1.h"
 
-
-
-
-
-
-
 /*
 * FUNCTION    : writeToBuffer
 * DESCRIPTION : Function that returns a random letter from a to t

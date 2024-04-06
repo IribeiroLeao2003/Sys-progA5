@@ -71,11 +71,22 @@ int main(int argc, char* argv[]) {
     // Enter the main loop of writing to circular buffer in shared memory
     while(running) {
         int writeResult = writeLetterToBuffer(pSharedMemory, semaphoreID);
-
+        int overwriteCounter = 0;
+    
         if (writeResult == kSuccess) {
             writeCounter++;
+        } else if (writeResult == kDontWrite) {
+            overwriteCounter++;
         }
         
+
+        // Evaluate if overwrite counter is getting excessive
+        if (overwriteCounter == kTriggerLongSleep) {
+            // Let's long sleep to allow catch up time and reset counter
+            overwriteCounter = 0;
+            sleep(5);
+        }
+
         // Sleep for 1/20th second (50,000 microseconds)
         // usleep(kOneTwentieth);
     }

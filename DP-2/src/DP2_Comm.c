@@ -90,6 +90,8 @@ int writeLetterToBuffer(SharedMemory* pSharedMemory, int semaphoreID) {
         usleep(kOneTwentieth); // 50,000 microseconds = 1/20th of a second
     } else {
         printf("DP2 doesn't want to overtake readIndex\n");
+        usleep(kOneTwentieth);
+        return kDontWrite;
     }
 
     // Release the semaphore
